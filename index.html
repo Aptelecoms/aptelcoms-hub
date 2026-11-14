@@ -555,6 +555,7 @@ body.nohome #nw{display:none!important}
 .ar2::before{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;pointer-events:none;z-index:2;background:linear-gradient(transparent,rgba(5,12,20,.55))}
 @media(prefers-reduced-motion:reduce){.ar2 svg,.a2-mist,.a2-dust circle{animation:none!important}}
 
+.mxg{direction:ltr;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:210px;margin:8px auto}.mxg>div{background:#fff;border:1px solid #f1d9c8;border-radius:8px}.mxo{direction:ltr;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:260px;margin:10px auto}.mxo .erop{padding:4px;display:flex;justify-content:center}.wmbox{text-align:center;font-size:44px;font-weight:900;color:#e65100;min-height:70px;line-height:70px;transition:opacity .2s}.wmpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:240px;margin:8px auto}
 /* site lock screen */
 html:not(.unlocked){overflow:hidden}
 html:not(.unlocked) body>*:not(#lock):not(script){visibility:hidden!important}
@@ -2538,7 +2539,7 @@ function memBurst(host,em,n){const r=host.getBoundingClientRect(),fx=el('memfx')
 function memCombo(t){const fx=el('memfx');if(!fx)return;const s=document.createElement('div');s.className='mcb';s.textContent=t;fx.appendChild(s);setTimeout(()=>s.remove(),1100)}
 function memFace(c){return c.n?'<div class="mb mbn"><small>'+esc(c.n[0])+'</small><b dir="ltr">'+esc(c.n[1])+'</b></div>':c.i?'<div class="mb mbi"><b dir="ltr">'+esc(c.i[0])+'</b>'+(c.i[1]?'<small>'+esc(c.i[1])+'</small>':'')+'</div>':'<div class="mb">'+c.e+'</div>'}
 function memDraw(){const b=el('memv');if(!b)return;
-if(MEM.v==='list'){const bs=memBest(),best=Object.keys(bs).length?Math.min(...Object.values(bs).map(x=>x.m)):0,op=gmOpen(),G=[['lu','🎲','Ludo · لودو','قواعد مصرية · ضد الكمبيوتر أو أونلاين'],['er','🗝️','Escape Room','اهرب من الغرف قبل الوقت · كل مرة جديدة'],['st','🏗️','Stack Tower','ابني أعلى برج بالتوقيت'],['ac','✈️','Sky Ace','معارك جوية · زعماء ومراحل وقنابل'],['fr','🚀','Flappy Rocket','طيّر الصاروخ وسط الكويكبات'],['np','🔢','Number Pattern','كمّل المتتالية'],['gp','💎','Gem Pop','ثلاث جواهر متطابقة']];
+if(MEM.v==='list'){const bs=memBest(),best=Object.keys(bs).length?Math.min(...Object.values(bs).map(x=>x.m)):0,op=gmOpen(),G=[['lu','🎲','Ludo · لودو','قواعد مصرية · ضد الكمبيوتر أو أونلاين'],['er','🧠','Test your IQ','ألغاز متنوعة وتقدير لمستواك في الآخر'],['st','🏗️','Stack Tower','ابني أعلى برج بالتوقيت'],['ac','✈️','Sky War','معارك جوية · زعماء ومراحل وقنابل'],['fr','🚀','Flappy Rocket','طيّر الصاروخ وسط الكويكبات'],['gp','💎','Gem Pop','ثلاث جواهر متطابقة']];
 b.innerHTML='<div class="mg1" id="memgo"><i>🃏</i><div><b>Memory Match</b><small>مفتوحة دايمًا</small></div></div><div class="mg1" id="orgo" style="margin-top:9px"><i>🏃</i><div><b>Orange Rush</b><small>اجري وجاوب أسئلة · مفتوحة دايمًا</small></div></div>'+G.map(g=>'<div class="mg1 gmc'+(op?'':' lk')+'" data-g="'+g[0]+'" style="margin-top:9px"><i>'+g[1]+'</i><div><b>'+g[2]+'</b><small>'+g[3]+'</small></div>'+(op?'':'<span style="margin-inline-start:auto;font-size:20px">🔒</span>')+'</div>').join('')+'<div class="gcd" id="gmcd" data-o="'+(op?1:0)+'">'+gmCdHtml(op)+'</div>'+(isTest()?'<div class="gtst">🧪 الوضع التجريبي شغال: الألعاب مفتوحة</div>':'')+(best?'<div class="cm" style="text-align:center;margin-top:12px">🏆 أحسن نتيجة في Memory Match: '+best+' حركة</div>':'');
 el('memgo').onclick=()=>{MEM.v='setup';memDraw()};el('orgo').onclick=()=>orStart();b.querySelectorAll('.gmc').forEach(x=>x.onclick=()=>{if(gmOpen())gmStart(x.dataset.g);else{x.classList.add('shk');setTimeout(()=>x.classList.remove('shk'),400)}});
 clearInterval(GM.cd);if(!GM.got)gmSync();GM.cd=setInterval(()=>{const c=el('gmcd');if(!c){clearInterval(GM.cd);return}const o=gmOpen();if((o?1:0)!==+c.dataset.o){memDraw();return}c.innerHTML=gmCdHtml(o)},1000)}
@@ -2591,7 +2592,7 @@ function gmSaveProg(P){try{localStorage.setItem('gm_prog',JSON.stringify(P))}cat
 function gmTest(){return typeof isTest==='function'&&isTest()}
 function gmUnl(k,tot){if(gmTest())return tot;const a=gmProg()[k]||[];let n=0;while(n<tot&&a[n]>0)n++;return Math.min(tot,n+1)}
 const GM_LV={np:[20,'🔢','Number Pattern','متتاليات من 10 أسئلة، المستوى بيعدي بـ 7 صح'],gp:[30,'💎','Gem Pop','لكل مستوى حركات وهدف نقاط وتحديات']};
-function gmStart(k,lv){memStop();if(k==='lu'){luSetup();return}if(k==='st'){stStart();return}if(k==='ac'){acStart();return}if(k==='fr'){frStart();return}if(k==='or'){orStart();return}if(k==='er'){erSetup();return}if((k==='np'||k==='gp')&&!lv){gmLevels(k);return}GM.lv=lv||0;if(k==='gp'){gpStart(lv);return}gmStartQ(k)}
+function gmStart(k,lv){memStop();if(k==='lu'){luSetup();return}if(k==='st'){stStart();return}if(k==='ac'){acStart();return}if(k==='fr'){frStart();return}if(k==='or'){orStart();return}if(k==='er'){iqSetup();return}if((k==='np'||k==='gp')&&!lv){gmLevels(k);return}GM.lv=lv||0;if(k==='gp'){gpStart(lv);return}gmStartQ(k)}
 function gmLevels(k){MEM.v='glv';const T=GM_LV[k],tot=T[0],un=gmUnl(k,tot),a=gmProg()[k]||[],b=el('memv');let h='';for(let i=1;i<=tot;i++){const lk=i>un,st=a[i-1]||0;h+='<div class="lvt'+(lk?' lk':'')+(i===un&&!lk&&!st?' cur':'')+'" data-l="'+i+'"><b>'+(lk?'🔒':i)+'</b><small>'+(st?'⭐'.repeat(st):'')+'</small></div>'}
 b.innerHTML='<div class="mst"><span>'+T[1]+' '+T[2]+'</span><span>مستوى '+un+'/'+tot+'</span></div><p class="cm" style="margin:0 0 8px">'+T[3]+'</p><div class="lvg">'+h+'</div><button class="mbtn o" id="glb">رجوع</button>';
 b.querySelectorAll('.lvt:not(.lk)').forEach(x=>x.onclick=()=>{if(gmOpen())gmStart(k,+x.dataset.l);else{MEM.v='list';memDraw()}});el('glb').onclick=()=>{MEM.v='list';memDraw()}}
@@ -2712,10 +2713,10 @@ x.textAlign='center';x.font='900 52px Cairo,Tahoma,sans-serif';x.fillStyle='rgba
 G.fx.forEach(f=>{x.globalAlpha=Math.max(0,f.a);x.font='900 22px Cairo,Tahoma,sans-serif';x.fillStyle='#ffd24d';x.fillText(f.t,W/2,f.y-8)});x.globalAlpha=1;
 GX.raf=requestAnimationFrame(loop)};GX.raf=requestAnimationFrame(loop);hud()}
 /* ---- Orange Rush ---- */
-function orStart(){memStop();const F=gxFrame('🏃 Orange Rush','اسحب يمين/شمال (أو الأسهم) عشان تغيّر الحارة · وقف في حارة الإجابة الصح عند البوابة','or'),x=F.x,c=F.c,W=360,H=520,HY=165,PY=455,LW=104,Z0=2400,T2=Math.PI*2;
+function orStart(){memStop();const F=gxFrame('🏃 Orange Rush','يمين/شمال: غيّر الحارة · لفوق: نطة · لتحت: زحلقة · وقف في حارة الإجابة الصح عند البوابة','or'),x=F.x,c=F.c,W=360,H=520,HY=165,PY=455,LW=104,Z0=2400,T2=Math.PI*2;
 const im=document.querySelector('.lg');
 const pool=Q.filter(q=>q[0].length<=80&&q.slice(1).every(a=>String(a).length<=22));
-const G=GX={alive:true,id:++GXID,k:'or',lane:1,px:1,go:false,over:false,hp:3,inv:0,zoff:0,coins:0,ok:0,bad:0,st:0,ms:0,bonus:0,t:0,last:0,items:[],sp:0,gap:300,gateIn:7,gate:null,fx:[],shk:0,flash:0,miss:null,v:300,pd:false,sw:false,sx:0};
+const G=GX={alive:true,id:++GXID,k:'or',lane:1,px:1,go:false,over:false,hp:3,inv:0,zoff:0,coins:0,ok:0,bad:0,st:0,ms:0,bonus:0,t:0,last:0,items:[],sp:0,gap:300,gateIn:7,gate:null,fx:[],shk:0,flash:0,miss:null,v:300,pd:false,sw:false,sx:0,sy:0,jt:0,sl:0,tip:{}};
 const sc=z=>1/(1+z/300),sy=z=>HY+(PY-HY)*sc(z),sxl=(l,z)=>180+(l-1)*LW*sc(z);
 const score=()=>Math.floor(G.zoff/30)+G.coins*10+G.bonus;
 const hud=()=>{el('gxs').textContent='⭐ '+score()};
@@ -2730,27 +2731,47 @@ setTimeout(()=>{if(GX!==G||MEM.v!=='gplay')return;const sc0=score(),b0=gxBest('o
 const m=G.miss;gxRes({e:'👋',t:nb?'باي باي يا كوتش · رقم قياسي جديد!':'باي باي يا كوتش',s:[[sc0,'النقاط'],[Math.max(sc0,b0),'أحسن نتيجة'],[G.coins,'عملات'],[G.ok+' / '+(G.ok+G.bad),'إجابات صح']],st:sc0>=4000?3:sc0>=2000?2:sc0>=700?1:0,w:sc0>=2000,al:true,f:orStart,
 x:m?'<div class="cm" style="text-align:right;margin:10px 0;background:#fff3ea;border:1px solid #f1d9c8;border-radius:12px;padding:8px 12px"><b>💡 آخر معلومة غلطت فيها</b><br>'+esc(m.q)+' ← <b>'+esc(m.a)+'</b></div>':''})},900)};
 const mv=d=>{if(G.over)return;G.go=true;const n=Math.max(0,Math.min(2,G.lane+d));if(n!==G.lane){G.lane=n;memTone(480+n*60,0,.05,'sine',.06)}};
-c.onpointerdown=e=>{e.preventDefault();G.pd=true;G.sw=false;G.sx=e.clientX;G.go=true;try{c.setPointerCapture(e.pointerId)}catch(_){}};
-c.onpointermove=e=>{if(!G.pd)return;const dx=e.clientX-G.sx;if(Math.abs(dx)>20){mv(dx>0?1:-1);G.sx=e.clientX;G.sw=true}};
+const jump=()=>{if(G.over)return;G.go=true;if(G.jt>0)return;G.sl=0;G.jt=.0001;memTone(620,0,.09,'triangle',.1);memTone(840,.05,.08,'triangle',.08)};
+const slide=()=>{if(G.over)return;G.go=true;if(G.jt>0){G.jt=.64;return}G.sl=.7;memTone(300,0,.12,'sawtooth',.07)};
+const air=()=>G.jt>.08&&G.jt<.64,duck=()=>G.sl>.04;
+c.onpointerdown=e=>{e.preventDefault();G.pd=true;G.sw=false;G.sx=e.clientX;G.sy=e.clientY;G.go=true;try{c.setPointerCapture(e.pointerId)}catch(_){}};
+c.onpointermove=e=>{if(!G.pd)return;const dx=e.clientX-G.sx,dy=e.clientY-G.sy;if(Math.abs(dy)>26&&Math.abs(dy)>Math.abs(dx)){dy<0?jump():slide();G.sx=e.clientX;G.sy=e.clientY;G.sw=true}else if(Math.abs(dx)>20&&Math.abs(dx)>=Math.abs(dy)){mv(dx>0?1:-1);G.sx=e.clientX;G.sy=e.clientY;G.sw=true}};
 c.onpointerup=e=>{if(!G.pd)return;G.pd=false;if(!G.sw){const r=c.getBoundingClientRect();mv(e.clientX<r.left+r.width/2?-1:1)}};
-GX.kd=e=>{const k=e.key;if(k==='ArrowLeft'||k==='a'||k==='A'){e.preventDefault();mv(-1)}else if(k==='ArrowRight'||k==='d'||k==='D'){e.preventDefault();mv(1)}};document.addEventListener('keydown',GX.kd);
-const spawn=()=>{const L=gmR(0,2),r=Math.random(),it=G.items;
-if(r<.4){for(let i=0;i<6;i++)it.push({t:'c',l:L,z:Z0+i*95})}
-else if(r<.75){const o=(L+gmR(1,2))%3;it.push({t:'k',l:o,z:Z0});for(let i=0;i<5;i++)it.push({t:'c',l:L,z:Z0+i*95})}
-else{it.push({t:'b',ls:[0,1,2].filter(l=>l!==L),z:Z0});for(let i=0;i<4;i++)it.push({t:'c',l:L,z:Z0+60+i*95})}};
+GX.kd=e=>{const k=e.key;if(k==='ArrowLeft'||k==='a'||k==='A'){e.preventDefault();mv(-1)}else if(k==='ArrowRight'||k==='d'||k==='D'){e.preventDefault();mv(1)}else if(k==='ArrowUp'||k==='w'||k==='W'||k===' '){e.preventDefault();jump()}else if(k==='ArrowDown'||k==='s'||k==='S'){e.preventDefault();slide()}};document.addEventListener('keydown',GX.kd);
+const spawn=()=>{const L=gmR(0,2),r=Math.random(),it=G.items,m=G.zoff/30,O=(L+gmR(1,2))%3,T=['k','bx','ph','rt'];
+if(r<.3||m<60){for(let i=0;i<6;i++)it.push({t:'c',l:L,z:Z0+i*95})}
+else if(r<.58){it.push({t:T[gmR(0,3)],l:O,z:Z0});for(let i=0;i<5;i++)it.push({t:'c',l:L,z:Z0+i*95})}
+else if(r<.8&&m>=100){it.push({t:'cb',ls:[0,1,2],z:Z0,tip:'up'});for(let i=0;i<3;i++)it.push({t:'c',l:L,z:Z0-70+i*70,up:1});for(let i=0;i<3;i++)it.push({t:'c',l:L,z:Z0+170+i*80})}
+else if(m>=180){it.push({t:'ar',ls:[0,1,2],z:Z0,tip:'down'});for(let i=0;i<4;i++)it.push({t:'c',l:L,z:Z0+130+i*80})}
+else{it.push({t:T[gmR(0,3)],l:O,z:Z0});for(let i=0;i<5;i++)it.push({t:'c',l:L,z:Z0+i*95})}};
 const rrect=(a,b,w,h,r)=>gxRR(x,a,b,w,h,r);
 const wrap=(t,w)=>{const ws=String(t).split(' '),ln=[];let cur='';ws.forEach(a=>{const n=cur?cur+' '+a:a;if(x.measureText(n).width>w&&cur){ln.push(cur);cur=a}else cur=n});if(cur)ln.push(cur);return ln};
-const drawRunner=(cx,cy,s)=>{const ph=G.go?G.t*13:0,sw=Math.sin(ph)*.55;x.save();x.translate(cx,cy);x.scale(s,s);if(G.inv>0&&Math.floor(G.t*14)%2)x.globalAlpha=.45;
-x.fillStyle='rgba(0,0,0,.38)';x.beginPath();x.ellipse(0,4,28,7,0,0,T2);x.fill();
+const drawRunner=(cx,cy,s)=>{const ph=(G.go&&G.jt<=0)?G.t*13:0,sw=G.jt>0?.7:Math.sin(ph)*.55,jy=G.jt>0?Math.sin(Math.PI*Math.min(1,G.jt/.72))*72:0;x.save();x.translate(cx,cy);x.scale(s,s);if(G.inv>0&&Math.floor(G.t*14)%2)x.globalAlpha=.45;
+x.fillStyle='rgba(0,0,0,'+(.38-jy*.002)+')';x.beginPath();x.ellipse(0,4,28-jy*.15,7,0,0,T2);x.fill();x.translate(0,-jy);if(G.sl>.04){x.translate(0,0);x.scale(1.1,.55)}
 const lg=(dx,a,col)=>{x.save();x.translate(dx,-50);x.rotate(a);x.fillStyle=col;rrect(-6,0,12,50,6);x.fill();x.restore()};lg(-9,sw,'#244a8f');lg(9,-sw,'#1d3d78');
 const ar=(dx,a)=>{x.save();x.translate(dx,-98);x.rotate(a);x.fillStyle='#ffcc99';rrect(-5,0,10,38,5);x.fill();x.restore()};ar(-26,-sw*.9);ar(26,sw*.9);
 x.fillStyle='#ff7a00';rrect(-21,-106,42,58,12);x.fill();x.fillStyle='#fffdf7';rrect(-17,-100,34,40,7);x.fill();
 if(im&&im.complete&&im.naturalWidth){const r=im.naturalWidth/im.naturalHeight,w=32,h=Math.min(36,w/r);x.drawImage(im,-16,-100+(40-h)/2,w,h)}
 x.fillStyle='#ffcc99';x.beginPath();x.arc(0,-122,16,0,T2);x.fill();x.fillStyle='#2b1b12';x.beginPath();x.arc(0,-124,16,Math.PI,T2);x.fill();x.fillRect(-16,-124,32,5);x.restore()};
-const drawItem=it=>{const z=it.z,s=sc(z),y=sy(z);if(s<.1)return;const a=Math.min(1,(s-.1)/.08);x.save();x.globalAlpha=a;
-if(it.t==='c'){const px=sxl(it.l,z),r=10*s+2,sq=Math.abs(Math.cos(G.t*5+it.z*.01));x.translate(px,y-16*s);x.scale(Math.max(.25,sq),1);x.fillStyle='#ffd54f';x.beginPath();x.arc(0,0,r,0,T2);x.fill();x.strokeStyle='#e08a00';x.lineWidth=Math.max(1,2*s);x.stroke();x.fillStyle='#b36200';x.font='900 '+Math.max(6,r*1.2)+'px sans-serif';x.textAlign='center';x.fillText('$',0,r*.42)}
-else if(it.t==='k'){const px=sxl(it.l,z);x.translate(px,y);x.scale(s,s);x.fillStyle='rgba(0,0,0,.35)';x.beginPath();x.ellipse(0,0,24,7,0,0,T2);x.fill();x.fillStyle='#ff5722';x.beginPath();x.moveTo(-18,0);x.lineTo(18,0);x.lineTo(7,-52);x.lineTo(-7,-52);x.closePath();x.fill();x.fillStyle='#fff';x.fillRect(-11,-31,22,8);x.fillStyle='#bf360c';rrect(-21,-4,42,7,2);x.fill()}
-else if(it.t==='b'){const l0=Math.min(...it.ls),l1=Math.max(...it.ls),xa=sxl(l0,z)-LW*.46*s,xb=sxl(l1,z)+LW*.46*s;x.fillStyle='rgba(0,0,0,.3)';x.fillRect(xa,y-3*s,xb-xa,6*s);x.fillStyle='#ececec';x.fillRect(xa,y-44*s,xb-xa,18*s);x.save();x.beginPath();x.rect(xa,y-44*s,xb-xa,18*s);x.clip();x.fillStyle='#ff5722';const sw2=14*s;for(let k=-2;k*sw2*2<xb-xa+40*s;k++){x.beginPath();x.moveTo(xa+k*sw2*2,y-26*s);x.lineTo(xa+k*sw2*2+sw2,y-26*s);x.lineTo(xa+k*sw2*2+sw2+14*s,y-44*s);x.lineTo(xa+k*sw2*2+14*s,y-44*s);x.fill()}x.restore();x.fillStyle='#777';x.fillRect(xa+4*s,y-26*s,6*s,26*s);x.fillRect(xb-10*s,y-26*s,6*s,26*s)}
+const drawItem=it=>{const z=it.z,s=sc(z),y=sy(z);if(s<.1)return;const a=Math.min(1,(s-.1)/.08),t=G.t;x.save();x.globalAlpha=a;
+const shadow=(w)=>{x.fillStyle='rgba(0,0,0,.35)';x.beginPath();x.ellipse(0,0,w,7,0,0,T2);x.fill()};
+if(it.t==='c'){const px=sxl(it.l,z),r=10*s+2,sq=Math.abs(Math.cos(t*5+it.z*.01));x.translate(px,y-(it.up?78:16)*s);x.scale(Math.max(.25,sq),1);x.fillStyle='#ffd54f';x.beginPath();x.arc(0,0,r,0,T2);x.fill();x.strokeStyle='#e08a00';x.lineWidth=Math.max(1,2*s);x.stroke();x.fillStyle='#b36200';x.font='900 '+Math.max(6,r*1.2)+'px sans-serif';x.textAlign='center';x.fillText('$',0,r*.42)}
+else if(it.t==='k'){x.translate(sxl(it.l,z),y);x.scale(s,s*(1+.05*Math.sin(t*6+z*.01)));shadow(24);x.fillStyle='#ff5722';x.beginPath();x.moveTo(-18,0);x.lineTo(18,0);x.lineTo(7,-54);x.lineTo(-7,-54);x.closePath();x.fill();x.fillStyle='#fff';x.fillRect(-12,-34,24,9);x.fillStyle='#bf360c';rrect(-21,-4,42,7,2);x.fill();
+x.fillStyle='#fff';x.beginPath();x.arc(-4.5,-44,4.6,0,T2);x.arc(4.5,-44,4.6,0,T2);x.fill();x.fillStyle='#111';x.beginPath();x.arc(-4,-43.5,2,0,T2);x.arc(5,-43.5,2,0,T2);x.fill();x.strokeStyle='#7a1d00';x.lineWidth=1.6;x.beginPath();x.arc(0,-38,3.5,.15,Math.PI-.15);x.stroke()}
+else if(it.t==='bx'){x.translate(sxl(it.l,z),y);x.scale(s,s);shadow(30);x.fillStyle='#c68642';rrect(-24,-34,48,34,3);x.fill();x.fillStyle='#e0a35a';x.fillRect(-24,-34,48,6);x.fillStyle='#f5e9d3';x.fillRect(-4,-34,8,34);
+x.save();x.translate(2,-34);x.rotate(-.14);x.fillStyle='#d99a4e';rrect(-18,-26,36,26,3);x.fill();x.fillStyle='#f5e9d3';x.fillRect(-3,-26,6,26);x.restore();x.fillStyle='#b71c1c';x.font='900 11px sans-serif';x.textAlign='center';x.fillText('⚠',-14,-12)}
+else if(it.t==='ph'){x.translate(sxl(it.l,z),y);x.scale(s,s);shadow(26);x.rotate(-.22);x.fillStyle='#1a1a22';rrect(-16,-58,32,56,6);x.fill();x.fillStyle='#2b6cb0';rrect(-13,-54,26,46,3);x.fill();x.strokeStyle='#fff';x.lineWidth=1.4;x.beginPath();x.moveTo(-2,-54);x.lineTo(5,-40);x.lineTo(-6,-32);x.lineTo(4,-20);x.lineTo(-3,-8);x.moveTo(5,-40);x.lineTo(13,-36);x.stroke();
+x.rotate(.22);if(Math.sin(t*18+z)>0){x.strokeStyle='#ffe44d';x.lineWidth=2.4;x.beginPath();x.moveTo(-18,-62);x.lineTo(-10,-70);x.lineTo(-14,-76);x.lineTo(-6,-84);x.stroke()}}
+else if(it.t==='rt'){x.translate(sxl(it.l,z),y);x.scale(s,s);shadow(30);x.fillStyle='#37474f';rrect(-26,-30,52,30,6);x.fill();x.fillStyle='#546e7a';x.fillRect(-26,-30,52,6);x.strokeStyle='#263238';x.lineWidth=4;x.beginPath();x.moveTo(-16,-30);x.lineTo(-22,-72);x.moveTo(16,-30);x.lineTo(22,-72);x.stroke();
+x.fillStyle=Math.sin(t*9+z)>0?'#ff1744':'#5d0a1a';x.beginPath();x.arc(-14,-14,3.6,0,T2);x.fill();x.fillStyle='#69f0ae';x.beginPath();x.arc(-2,-14,3.6,0,T2);x.arc(10,-14,3.6,0,T2);x.fill();
+x.strokeStyle='#ffe44d';x.lineWidth=2.4;if(Math.sin(t*14+z)>-.2){x.beginPath();x.moveTo(-2,-76);x.lineTo(5,-84);x.lineTo(0,-90);x.lineTo(8,-100);x.stroke()}}
+else if(it.t==='cb'){const xa=sxl(-.6,z),xb=sxl(2.6,z),hy=y-14*s;x.strokeStyle='rgba(0,0,0,.3)';x.lineWidth=5*s;x.beginPath();x.moveTo(xa,y);x.lineTo(xb,y);x.stroke();
+x.strokeStyle='#111';x.lineWidth=Math.max(2,8*s);x.lineCap='round';x.beginPath();x.moveTo(xa,hy);x.quadraticCurveTo((xa+xb)/2,hy+14*s,xb,hy);x.stroke();x.strokeStyle='#ffb300';x.lineWidth=Math.max(1,2.6*s);x.setLineDash([9*s,9*s]);x.beginPath();x.moveTo(xa,hy);x.quadraticCurveTo((xa+xb)/2,hy+14*s,xb,hy);x.stroke();x.setLineDash([]);
+x.fillStyle='#455a64';x.fillRect(xa-12*s,hy-9*s,14*s,18*s);x.fillRect(xb-2*s,hy-9*s,14*s,18*s);x.fillStyle='#cfd8dc';x.fillRect(xa-18*s,hy-6*s,6*s,3*s);x.fillRect(xa-18*s,hy+3*s,6*s,3*s);
+if(Math.sin(t*16+z)>0){x.strokeStyle='#ffe44d';x.lineWidth=Math.max(1,2.4*s);x.beginPath();x.moveTo(xb+14*s,hy-14*s);x.lineTo(xb+22*s,hy-22*s);x.lineTo(xb+16*s,hy-28*s);x.lineTo(xb+26*s,hy-38*s);x.stroke()}}
+else if(it.t==='ar'){const xl=sxl(-.62,z),xr=sxl(2.62,z),ph=118*s;x.fillStyle='#455a64';x.fillRect(xl-5*s,y-ph,10*s,ph);x.fillRect(xr-5*s,y-ph,10*s,ph);x.fillStyle='rgba(0,0,0,.28)';x.fillRect(xl,y-2*s,xr-xl,4*s);
+x.fillStyle='#212121';rrect(xl-6*s,y-ph,xr-xl+12*s,52*s,8*s);x.fill();x.strokeStyle='#ff1744';x.lineWidth=Math.max(1,3*s);x.stroke();x.fillStyle='#ff1744';x.font='900 '+Math.max(7,17*s)+'px Cairo,Tahoma,sans-serif';x.textAlign='center';x.direction='rtl';x.fillText('📵 مفيش شبكة',(xl+xr)/2,y-ph+32*s);
+x.strokeStyle='#ffd600';x.lineWidth=Math.max(1,3*s);for(let k=0;k<7;k++){const bx=xl+(xr-xl)*(k/6);x.beginPath();x.moveTo(bx-6*s,y-ph+52*s);x.lineTo(bx+6*s,y-ph+44*s);x.stroke()}}
 x.restore()};
 const drawGate=g=>{const z=g.z,s=sc(z),y=sy(z);if(s<.1)return;const a=Math.min(1,(s-.1)/.08);x.save();x.globalAlpha=a;const xl=sxl(-.62,z),xr=sxl(2.62,z),ph=170*s;
 x.fillStyle='#ff6a00';x.fillRect(xl-6*s,y-ph,12*s,ph);x.fillRect(xr-6*s,y-ph,12*s,ph);x.strokeStyle='#fff';x.lineWidth=Math.max(1,2*s);rrect(xl-6*s,y-ph-12*s,xr-xl+12*s,30*s,8*s);x.fillStyle='#ff6a00';x.fill();x.stroke();
@@ -2760,7 +2781,12 @@ const fs=Math.max(7,13*s);x.font='900 '+fs+'px Cairo,Tahoma,sans-serif';x.fillSt
 const draw=()=>{x.save();x.clearRect(0,0,W,H);if(G.shk>0)x.translate((Math.random()-.5)*8*G.shk,(Math.random()-.5)*8*G.shk);
 x.drawImage(BG,0,0);x.fillStyle='#1b2b2a';x.fillRect(0,HY+20,W,H-HY);x.fillStyle='#223b36';x.fillRect(0,HY+20,W,3);
 x.fillStyle='#4a4358';x.beginPath();x.moveTo(180-14,HY+20);x.lineTo(180+14,HY+20);x.lineTo(180+156*(H-HY)/(PY-HY)+20,H);x.lineTo(180-156*(H-HY)/(PY-HY)-20,H);x.closePath();x.fill();
-const off=G.zoff%200;
+x.fillStyle='#4a4358';x.fillRect(0,HY,0,0);
+/* road covers HY..; fix top: fill from horizon */
+x.save();x.beginPath();x.rect(0,HY+20,W,H);x.clip();
+const off=G.zoff%200;x.fillStyle='rgba(255,224,160,.85)';for(let i=-1;i<14;i++){const z0=i*200-off,z1=z0+90;if(z1<=0)continue;const s0=sc(Math.max(0,z0)),s1=sc(z1),ya=sy(Math.max(0,z0)),yb=sy(z1);[.5,1.5].forEach(l=>{const xa=180+(l-1)*LW*s0,xb=180+(l-1)*LW*s1;[1,-1].forEach(sg=>{const x0=180+sg*(l-1+ (sg===1?0:0))*0;});});}
+[-.5+1,1.5].forEach(()=>{});
+x.restore();
 /* lane dashes */
 x.save();x.fillStyle='rgba(255,224,160,.85)';for(let i=-1;i<14;i++){const z0=Math.max(0,i*200-off),z1=i*200-off+90;if(z1<=0||z0>=Z0)continue;[.5,1.5].forEach(l=>{const a0=sc(z0),a1=sc(z1),ya=sy(z0),yb=sy(z1),xa=180+(l-1)*LW*a0,xb=180+(l-1)*LW*a1,wa=3.2*a0,wb=3.2*a1;x.beginPath();x.moveTo(xa-wa,ya);x.lineTo(xa+wa,ya);x.lineTo(xb+wb,yb);x.lineTo(xb-wb,yb);x.closePath();x.fill()})}x.restore();
 /* road edges + poles */
@@ -2778,9 +2804,15 @@ if(!G.go){x.fillStyle='rgba(0,0,0,.45)';rrect(40,200,W-80,90,16);x.fill();x.fill
 x.restore()};
 const loop=ts=>{if(GX!==G||!G.alive)return;const dt=Math.min(.033,(ts-(G.last||ts))/1000);G.last=ts;G.t+=dt;
 if(G.go&&!G.over){let v=330+Math.min(250,G.zoff/30*.45);if(G.gate&&G.gate.z>300)v*=.72;G.v=v;const dz=v*dt;G.zoff+=dz;
-G.items.forEach(it=>it.z-=dz);if(G.gate)G.gate.z-=dz;G.px+=(G.lane-G.px)*Math.min(1,dt*14);if(G.inv>0)G.inv-=dt;
+G.items.forEach(it=>it.z-=dz);if(G.gate)G.gate.z-=dz;G.px+=(G.lane-G.px)*Math.min(1,dt*14);if(G.inv>0)G.inv-=dt;if(G.jt>0){G.jt+=dt;if(G.jt>=.72)G.jt=0}if(G.sl>0)G.sl-=dt;
 if(!G.gate){G.gateIn-=dt;G.sp+=dz;if(G.gateIn<=0){const q=nextQ();G.gate={z:Z0+500,q:q.q,a:q.a,o:q.o,done:false}}else if(G.sp>=G.gap){G.sp=0;G.gap=330+Math.random()*190;spawn()}}
-G.items.forEach(it=>{if(it.h||it.z>0||it.z<-70)return;const inL=it.t==='b'?it.ls.indexOf(G.lane)>=0:it.l===G.lane;if(!inL)return;it.h=true;if(it.t==='c'){G.coins++;memTone(900+Math.min(G.coins,20)*18,0,.05,'triangle',.09)}else hit('💥 خبطت!')});
+G.items.forEach(it=>{if(it.h||it.z>0)return;it.h=true;const inL=it.ls?it.ls.indexOf(G.lane)>=0:it.l===G.lane;if(!inL)return;
+if(it.t==='c'){if(it.up&&!air())return;G.coins++;memTone(900+Math.min(G.coins,20)*18,0,.05,'triangle',.09)}
+else if(it.t==='rt')hit('⚡ الراوتر ولّع!');
+else if(it.t==='ar'){if(!duck())hit('📵 مفيش شبكة!')}
+else if(it.t==='cb'){if(!air())hit('⚡ كابل متكهرب!')}
+else{if(!air())hit(it.t==='ph'?'📱 اتكسر!':it.t==='bx'?'📦 كراتين!':'💥 خبطت!')}});
+G.items.forEach(it=>{if(it.tip&&!G.tip[it.tip]&&it.z<1300&&it.z>0){G.tip[it.tip]=1;say(it.tip==='up'?'⬆️ اسحب لفوق عشان تنط!':'⬇️ اسحب لتحت عشان تزحلق!','#ffe082')}});
 if(G.gate&&!G.gate.done&&G.gate.z<=0){G.gate.done=true;const o=G.gate.o[G.lane];if(o.ok){G.ok++;G.st++;G.ms=Math.max(G.ms,G.st);const b=100+Math.min(G.st,10)*20;G.bonus+=b;say('✅ صح! +'+b,'#a5d6a7');memTone(660,0,.12,'triangle',.18);memTone(990,.1,.2,'triangle',.18)}else{G.bad++;G.miss={q:G.gate.q,a:G.gate.a};hit('❌ الصح: '+G.gate.a)}}
 if(G.gate&&G.gate.z<-90){G.gate=null;G.gateIn=10+Math.random()*4;G.sp=0;G.gap=420}
 G.items=G.items.filter(it=>it.z>-120)}
@@ -2819,7 +2851,7 @@ if(!G.go){x.font='800 20px Cairo,Tahoma,sans-serif';x.fillStyle='#ffd24d';x.fill
 if(G.banner>0){x.globalAlpha=Math.min(1,G.banner);x.font='900 26px Cairo,Tahoma,sans-serif';x.fillStyle='#ffd24d';x.fillText('🌌 مرحلة '+(G.stage+1),W/2,130);x.globalAlpha=1}
 x.restore();GX.raf=requestAnimationFrame(loop)};GX.raf=requestAnimationFrame(loop);hud()}
 /* ---- Sky Ace ---- */
-function acStart(){memStop();const F=gxFrame('✈️ Sky Ace','اسحب بصباعك عشان تحرك الطيارة · النار أوتوماتيك · 💣 قنبلة · 🚀 ضربة صواريخ','ac'),x=F.x,c=F.c,W=360,H=520;
+function acStart(){memStop();const F=gxFrame('✈️ Sky War','اسحب بصباعك عشان تحرك الطيارة · النار أوتوماتيك · 💣 قنبلة · 🚀 ضربة صواريخ','ac'),x=F.x,c=F.c,W=360,H=520;
 const R=Math.random,rr=(a,b)=>a+R()*(b-a),T2=6.283;
 const bg=document.createElement('canvas'),CS=6,GW=60,GH=90;bg.width=GW*CS;bg.height=GH*CS;
 const BIO=[
@@ -2971,14 +3003,14 @@ function erStart(r){memStop();const n=[5,7,10,8][r],d=r+1,tt=n*[80,80,75,150][r]
 GX={alive:true,id:ER.id,k:'er'};erRoom()}
 function erTick(){if(!ER.alive)return;const l=Math.ceil((ER.dl-Date.now())/1000),t=el('ert');if(t){t.textContent='⏱ '+memT(Math.max(0,l));t.classList.toggle('lw',l<=30)}if(l<=0)erEnd(false)}
 function erPen(s){ER.dl-=s*1000;const t=el('erpn');if(t){t.textContent='-'+s+'ث';t.classList.remove('on');void t.offsetWidth;t.classList.add('on')}}
-function erWrong(h){h=h||el('erp');if(h){h.classList.remove('shk');void h.offsetWidth;h.classList.add('shk')}erPen(3);memTone(160,0,.25,'sawtooth',.15)}
+function erWrong(h){h=h||el('erp');if(h){h.classList.remove('shk');void h.offsetWidth;h.classList.add('shk')}if(ER.mode==='iq'){memTone(160,0,.25,'sawtooth',.15);ER.wr=(ER.wr||0)+1;if(ER.single||ER.wr>=5)iqFinish(0);return}erPen(3);memTone(160,0,.25,'sawtooth',.15)}
 function erRoom(){erClear();ER.tm=setInterval(erTick,250);ER.lock=false;ER.alive=true;const b=el('memv'),i=ER.i,rm=ER.names[i],ty=ER.types[i];MEM.v='gplay';
 b.innerHTML='<div class="erh"><span id="ert">⏱ '+memT(Math.max(0,Math.ceil((ER.dl-Date.now())/1000)))+'</span><span id="erpn" class="erpn"></span><span>🚪 غرفة '+(i+1)+'/'+ER.n+'</span></div><div class="erbar"><i style="width:'+(i/ER.n*100)+'%"></i></div><div class="erroom" style="position:relative"><div id="memfx" class="mfx"></div><div class="ertit"><span>'+rm[0]+'</span> '+rm[1]+'</div><div class="erpz">'+ER_T[ty]+'</div><p class="erins" id="erins"></p><div id="erp" class="erp"></div></div><div class="erbt"><button class="mbtn o" id="erhint">💡 تلميح (-15ث)</button><button class="mbtn o" id="erskip">⏭ تخطي (-40ث)</button></div><button class="mbtn o" id="gend" style="margin-top:6px">إنهاء اللعبة</button>';
 el('gend').onclick=()=>{memStop();MEM.v='list';memDraw()};
 ER.cur=ER_P[ty](el('erp'),erDone,ER.d,t=>{el('erins').textContent=t});
 el('erhint').onclick=()=>{if(ER.lock)return;ER.hints++;erPen(15);const h=ER.cur.hint&&ER.cur.hint();if(h){el('erins').textContent='💡 '+h}};
 el('erskip').onclick=()=>{if(ER.lock)return;ER.skips++;erPen(40);erDone(true)}}
-function erDone(skip){if(ER.lock||!ER.alive)return;ER.lock=true;memSound(skip?'ok':'win');const fx=el('memfx');if(fx){const o=document.createElement('div');o.className='erdoor';o.innerHTML='<b>'+(skip?'⏭':'🔓')+'</b><span>'+(ER.i+1>=ER.n?'الباب الأخير!':'الباب اتفتح')+'</span>';fx.appendChild(o);for(let k=0;k<10;k++)memBurst(o,['✨','⭐','🔑'],1)}
+function erDone(skip){if(ER.mode==='iq'){iqFinish(skip?0:1);return}if(ER.lock||!ER.alive)return;ER.lock=true;memSound(skip?'ok':'win');const fx=el('memfx');if(fx){const o=document.createElement('div');o.className='erdoor';o.innerHTML='<b>'+(skip?'⏭':'🔓')+'</b><span>'+(ER.i+1>=ER.n?'الباب الأخير!':'الباب اتفتح')+'</span>';fx.appendChild(o);for(let k=0;k<10;k++)memBurst(o,['✨','⭐','🔑'],1)}
 const id=ER.id,r=ER.i;setTimeout(()=>{if(ER.id!==id||ER.i!==r||!ER.alive)return;ER.i++;if(ER.i>=ER.n)erEnd(true);else erRoom()},950)}
 function erEnd(win){if(!ER.alive)return;ER.alive=false;erClear();const left=Math.max(0,Math.ceil((ER.dl-Date.now())/1000)),tot=ER.tot||ER.n*80,nb=win&&left>gxBest('er');if(win)gxBest('er',left);const f=left/tot,st=win?(f>=.4?3:f>=.2?2:1):0;
 gxRes({e:win?(ER.r===3?'👑':'🏆'):'⌛',t:win?(ER.r===3?'مفيش حاجه مستحيله فعلًا! 👑':nb?'هربت برقم قياسي!':'هربت من كل الغرف!'):'الوقت خلص!',s:win?[[memT(left),'الوقت المتبقي'],[ER.n,'غرف'],[ER.hints,'تلميحات']]:[[ER.i,'غرف اتفتحت من '+ER.n],[ER.hints,'تلميحات'],[ER.skips,'تخطي']],st:win?st:0,w:win,f:()=>erStart(ER.r)})}
@@ -3278,6 +3310,115 @@ el('inb').onclick=()=>{if(dp){dp.prompt();dp=null}el('ins').classList.remove('on
 sLoad();setInterval(sLoad,60000);setInterval(()=>{const c=document.querySelector('#pg .challenge');if(c)c.classList.toggle('fire',weeklyOpen())},30000);setInterval(cdTick,1000);(function(){const i=el('intro');if(!i)return;const f=()=>document.body.classList.toggle('nohome',i.classList.contains('hide'));new MutationObserver(f).observe(i,{attributes:true,attributeFilter:['class']});f()})();(function(){let n=0,t=0;const i=el('introimg');if(i)i.addEventListener('click',()=>{const w=Date.now();if(w-t>4000)n=0;t=w;n++;if(n>=7){n=0;let on=false;try{on=sessionStorage.getItem('apw_test')==='1';if(on)sessionStorage.removeItem('apw_test');else sessionStorage.setItem('apw_test','1')}catch(e){}alert(on?'تم إيقاف وضع التجربة':'🧪 وضع تجربة التحدي شغال: من غير وقت ولا حد محاولات ولا حفظ نتيجة، لحد ما تقفل التطبيق');hR()}})})();
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});
 try{if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock()}catch(e){}
+
+/* ===== Test your IQ: new puzzle types + adaptive test ===== */
+Object.assign(ER_T,{np:'🔢 المتتالية',mi:'🧮 القاعدة الخفية',wp:'📝 مسألة حسابية',lg:'📏 الترتيب المنطقي',sy:'⚖️ الاستنتاج',an:'🔗 العلاقات',cs:'🔎 اللي مش من الباقي',mx:'🔷 مصفوفة الأشكال',wm:'🧠 ذاكرة الأرقام'});
+const IQ_DOM={num:['code','seq','eq','np','mi','wp'],log:['lights','bin','sort','lg','sy'],ver:['cipher','riddle','scr','an','cs'],spa:['odd','slide','path','mx'],mem:['simon','pat','wm']};
+const IQ_DN={num:'🔢 الأرقام',log:'🧩 المنطق',ver:'🔤 اللغة',spa:'🧭 المكاني',mem:'🧠 الذاكرة'};
+const IQ_SINGLE=new Set(['riddle','seq','np','an','cs','lg','sy','mx','mi','wp','wm']);
+const IQ_B={1:-1.6,2:-.6,3:.5,4:1.8};
+const iqNumOpts=(a,ds)=>{const s=new Set([a]);const c=ER_SH([a+1,a-1,a+2,a-2,a+10,a-10,a*2,Math.round(a/2),a+3,a-3].concat(ds||[]));for(const v of c){if(s.size>=5)break;if(v!==a&&v>=0&&Number.isFinite(v))s.add(v)}let k=4;while(s.size<5)s.add(a+k++);return ER_SH([...s]).map(v=>({l:String(v),v:v}))};
+const iqMC=(h,say,txt,q,opts,ans,ins,hint)=>{say(txt);h.innerHTML='<div class="erriddle">'+q+'</div><div class="erops">'+opts.map((o,j)=>'<button class="erop" data-j="'+j+'">'+o.l+'</button>').join('')+'</div>';
+h.querySelectorAll('.erop').forEach(b=>b.onclick=()=>{if(opts[+b.dataset.j].v===ans)ins();else erWrong(h)});
+return{solve(){h.querySelector('.erop[data-j="'+opts.findIndex(o=>o.v===ans)+'"]').click()},hint(){return hint||'فكر في القاعدة'}}};
+const IQ_NM=['أحمد','منى','سمير','هدى','كريم','ليلى','عمر','دينا','ياسر','نهى','طارق','سلمى'];
+const IQ_AT=[['أطول','أقصر','الأطول','الأقصر'],['أكبر سنًا','أصغر سنًا','الأكبر سنًا','الأصغر سنًا'],['أسرع','أبطأ','الأسرع','الأبطأ'],['أغنى','أفقر','الأغنى','الأفقر']];
+const IQ_NS=['الزينات','الكوتات','المرزات','البلوفات','الدرفات','التلكات','الفرنات','الجلبات'];
+const IQ_AN=[[1,'قلم : كتابة = مقص : ؟','قص',['لبس','أكل','ورق']],[1,'سمكة : ماء = طائر : ؟','هواء',['بحر','عش','أرض']],[1,'عين : رؤية = أذن : ؟','سمع',['شم','لمس','كلام']],[1,'ساعة : وقت = ميزان : ؟','وزن',['طول','حرارة','سرعة']],
+[2,'طبيب : مستشفى = معلم : ؟','مدرسة',['ملعب','سوق','مطعم']],[2,'كتاب : قارئ = أغنية : ؟','مستمع',['مغني','ملحن','آلة']],[2,'صيف : حار = شتاء : ؟','بارد',['ممطر','قصير','أخضر']],[2,'يد : قفاز = رأس : ؟','قبعة',['شعر','وجه','عين']],
+[3,'جزء : كل = صفحة : ؟','كتاب',['قلم','مكتبة','حرف']],[3,'سبب : نتيجة = مطر : ؟','بلل',['غيم','سحاب','مظلة']],[3,'حرارة : ترمومتر = سرعة : ؟','عداد',['سيارة','طريق','وقت']],[3,'خوف : هروب = جوع : ؟','أكل',['نوم','صراخ','ركض']],[3,'بداية : نهاية = ميلاد : ؟','وفاة',['طفولة','شباب','عيد']],[3,'شجرة : غابة = نجمة : ؟','مجرة',['قمر','سماء','ضوء']],
+[4,'أمل : يأس = شجاعة : ؟','جبن',['قوة','حذر','حكمة']],[4,'لص : سرقة = محتال : ؟','خداع',['هروب','سجن','قانون']],[4,'معدن : صدأ = خشب : ؟','تسوس',['نجارة','شجرة','نار']],[4,'قلق : هدوء = تردد : ؟','حسم',['خوف','تفكير','شك']],[4,'ربح : خسارة = ادخار : ؟','إنفاق',['مال','بنك','توفير']],[4,'فلاح : حصاد = صانع : ؟','إنتاج',['بيع','مصنع','آلة']]];
+const IQ_CS=[[1,['تفاح','موز','برتقال','كرسي'],'كرسي'],[1,['قطة','كلب','أسد','طاولة'],'طاولة'],[1,['ماء','لبن','عصير','خبز'],'خبز'],[2,['حديد','نحاس','ذهب','زجاج'],'زجاج'],[2,['مثلث','دائرة','مربع','مكعب'],'مكعب'],[2,['ثلاثة','ستة','تسعة','سبعة'],'سبعة'],[2,['جبل','وادي','بحيرة','مطر'],'مطر'],
+[3,['نسر','صقر','بومة','خفاش'],'خفاش'],[3,['حوت','دولفين','فقمة','قرش'],'قرش'],[3,['حقيبة','جيب','صندوق','مفتاح'],'مفتاح'],[3,['شمس','شمعة','مصباح','ثلاجة'],'ثلاجة'],[4,['أربعة','تسعة','ستة عشر','اثنا عشر'],'اثنا عشر'],[4,['جمع','ضرب','قسمة','كسر'],'كسر'],[4,['ذهب','فضة','نحاس','ملح'],'ملح']];
+const mxShape=(sh,fill,cx,cy,r)=>{const st='#e65100',fl=fill===1?'#ff8a33':fill===2?'#ffd9b8':'#fff';const a='fill="'+fl+'" stroke="'+st+'" stroke-width="2.2"';
+if(sh===0)return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" '+a+'/>';if(sh===1)return '<rect x="'+(cx-r)+'" y="'+(cy-r)+'" width="'+2*r+'" height="'+2*r+'" '+a+'/>';
+const P=(pts)=>'<polygon points="'+pts.map(p=>(cx+p[0]*r).toFixed(1)+','+(cy+p[1]*r).toFixed(1)).join(' ')+'" '+a+'/>';
+if(sh===2)return P([[0,-1.1],[1.05,.9],[-1.05,.9]]);if(sh===3)return P([[0,-1.2],[1,0],[0,1.2],[-1,0]]);return P([[-.5,-.9],[.5,-.9],[1.1,0],[.5,.9],[-.5,.9],[-1.1,0]])};
+const mxCell=(c,sz)=>{const pos=c.n===1?[[32,32]]:c.n===2?[[20,32],[44,32]]:[[17,36],[47,36],[32,15]],r=c.n===1?14:c.n===2?9.5:8;return '<svg viewBox="0 0 64 64" width="'+sz+'" height="'+sz+'">'+pos.map(p=>mxShape(c.s,c.f,p[0],p[1],r)).join('')+'</svg>'};
+const IQ_WL=['قلم','مقص','حقيبة'];
+Object.assign(ER_P,{
+np(h,ins,d,say){const R=gmR,L=[];const fib=(a,b,n)=>{const o=[a,b];while(o.length<n)o.push(o[o.length-1]+o[o.length-2]);return o};
+const G={1:[()=>{const s=R(1,20),k=R(2,9);return Array.from({length:7},(_,i)=>s+k*i)},()=>{const k=R(2,8),s=R(60,95);return Array.from({length:7},(_,i)=>s-k*i)}],
+2:[()=>{const s=R(1,4),k=R(2,3);return Array.from({length:7},(_,i)=>s*Math.pow(k,i))},()=>{const a=R(4,9),b=R(1,3),s=R(5,20),o=[s];for(let i=1;i<7;i++)o.push(o[i-1]+(i%2?a:-b));return o},()=>{const s=R(1,9),o=[s];for(let i=1;i<7;i++)o.push(o[i-1]+i);return o},()=>{const c=R(0,5);return Array.from({length:7},(_,i)=>(i+1)*(i+1)+c)}],
+3:[()=>fib(R(1,4),R(2,6),7),()=>{const s=R(1,4),o=[s];for(let i=1;i<7;i++)o.push(o[i-1]*2+1);return o},()=>{const s=R(2,5),o=[s];for(let i=1;i<7;i++)o.push(o[i-1]*3-2);return o},()=>{const s=R(1,6),o=[s];for(let i=0;i<6;i++)o.push(o[i]+Math.pow(2,i));return o},()=>Array.from({length:7},(_,i)=>Math.pow(i+1,3)+R(0,0))],
+4:[()=>{const s=R(2,9),t=R(1,3),o=[];for(let i=0;i<8;i++)o.push(i%2?t*Math.pow(2,(i-1)/2):s+3*(i/2));return o},()=>{const ds=n=>String(n).split('').reduce((x,y)=>x+ +y,0),s=R(3,9),o=[s];for(let i=1;i<7;i++)o.push(o[i-1]+ds(o[i-1]));return o},()=>{const s=R(3,6),o=[s];for(let i=1;i<7;i++)o.push(o[i-1]*2-i);return o},()=>{const s=R(2,5),o=[s];for(let i=1;i<7;i++)o.push(i%2?o[i-1]*2:o[i-1]+3);return o},()=>{const o=[1];for(let i=1;i<7;i++)o.push(o[i-1]*(i+1));return o}]};
+const f=G[Math.min(4,Math.max(1,d))],t=f[R(0,f.length-1)](),n=t.length,ans=t[n-1],shown=t.slice(0,n-1);
+const ds=[ans+(t[n-1]-t[n-2]),ans-(t[n-2]-t[n-3]),t[n-2]*2];
+return iqMC(h,say,'اكتشف القاعدة وكمّل المتتالية:','<div class="erenc" dir="ltr" style="font-size:22px">'+shown.join(' ، ')+' ، ؟</div>',iqNumOpts(ans,ds),ans,ins,'بص على الفرق أو النسبة بين كل رقمين ورا بعض')},
+wp(h,ins,d,say){const R=gmR;let q,a,ds=[];
+const T={1:[()=>{const n=R(3,9),p=R(4,15),pay=Math.ceil((n*p+1)/50)*50+R(0,1)*50;q='اشتريت '+n+' حاجة سعر الواحدة '+p+' جنيه، ودفعت '+pay+' جنيه. الباقي كام جنيه؟';a=pay-n*p},()=>{const x=R(6,15),n=R(4,12),b=R(2,9)*10;q='مندوب بياخد '+x+' جنيه عمولة على كل عملية، وعمل '+n+' عمليات وخد مكافأة '+b+' جنيه. إجمالي دخله كام جنيه؟';a=x*n+b}],
+2:[()=>{const pc=[10,20,25,50][R(0,3)],P=R(2,9)*20*(pc===25?2:1);q='باقة سعرها '+P+' جنيه عليها خصم '+pc+'%. السعر بعد الخصم كام جنيه؟';a=P*(100-pc)/100;ds=[P*pc/100]},()=>{const pc=[10,20,25,40,50][R(0,4)],N=R(2,8)*20;q='في شركة '+N+' عميل، '+pc+'% منهم عملاء جدد. كام عميل جديد؟';a=N*pc/100}],
+3:[()=>{const v=[60,90,120][R(0,2)],m=R(2,9)*10,D=v*m/60;q='عربية سرعتها '+v+' كم/ساعة. هتقطع '+D+' كم في كام دقيقة؟';a=m},()=>{const P=[[6,3,2],[12,4,3],[10,15,6],[4,12,3],[20,5,4],[30,6,5]][R(0,5)];q='عامل بيخلص شغلانة في '+P[0]+' ساعات وعامل تاني بيخلصها في '+P[1]+' ساعات. لو اشتغلوا مع بعض هيخلصوها في كام ساعة؟';a=P[2]},()=>{const x=R(2,5),t=R(3,6),k=R(2,4);q=x+' عملاء بيتخدموا في '+t+' دقايق. كام عميل يتخدموا في '+t*k+' دقيقة بنفس المعدل؟';a=x*k}],
+4:[()=>{const p=[10,20,30,40][R(0,3)];q='سعر زاد '+p+'% وبعدها نقص '+p+'% من السعر الجديد. السعر النهائي كام % من السعر الأصلي؟';a=100-p*p/100;ds=[100]},()=>{const x=R(4,15),m=R(3,6),b=R(3,12);q='رقم لو ضربناه في '+m+' وطرحنا منه '+b+' يطلع '+(x*m-b)+'. الرقم ده كام؟';a=x},()=>{const p=[[3,2],[2,3],[4,1],[3,4]][R(0,3)],k=R(2,8),N=(p[0]+p[1])*k;q='نسبة الموظفين للموظفات '+p[0]+':'+p[1]+' والمجموع '+N+'. كام موظف؟';a=p[0]*k},()=>{let A,a1,b1,c1;do{A=R(12,30);a1=R(8,25);b1=R(8,25);c1=3*A-a1-b1}while(c1<=0||c1>60);q='متوسط 3 أرقام '+A+'، اتنين منهم '+a1+' و'+b1+'. الرقم التالت كام؟';a=c1}]};
+const f=T[Math.min(4,Math.max(1,d))];f[R(0,f.length-1)]();return iqMC(h,say,'اقرا المسألة بتركيز وجاوب:','<div class="erriddle" style="font-size:16px;line-height:1.7">'+q+'</div>',iqNumOpts(a,ds),a,ins,'اكتب المعطيات بالترتيب وحلها خطوة خطوة')},
+lg(h,ins,d,say){const R=gmR,n=Math.min(6,2+d),at=IQ_AT[R(0,3)],nm=ER_SH(IQ_NM).slice(0,n),st=[];
+for(let i=0;i<n-1;i++){const hi=nm[i],lo=nm[i+1];st.push(Math.random()<.5||d<2?hi+' '+at[0]+' من '+lo:lo+' '+at[1]+' من '+hi)}
+let qt,ans;const mode=d>=4?2:d>=3?1:0;if(mode===0){const top=Math.random()<.5;qt='مين '+(top?at[2]:at[3])+'؟';ans=top?nm[0]:nm[n-1]}else if(mode===1){qt='مين اللي في النص بالظبط (ترتيبه '+Math.ceil(n/2)+' من فوق)؟';const ix=Math.ceil(n/2)-1;ans=nm[ix]}else{const k=R(2,n-1);qt='لو رتبناهم من '+at[2]+' للأقل، مين رقم '+k+'؟';ans=nm[k-1]}
+return iqMC(h,say,'رتب المعلومات في دماغك وجاوب:','<div class="erriddle" style="font-size:15px;line-height:1.9">'+ER_SH(st).join('<br>')+'<br><b>'+qt+'</b></div>',ER_SH(nm.slice()).map(x=>({l:x,v:x})),ans,ins,'رتب الأسماء في خط من الأعلى للأدنى')},
+sy(h,ins,d,say){const R=gmR,N=ER_SH(IQ_NS),A=N[0],B=N[1],C=N[2],D=N[3];let ps,cn,ok;const Y='أكيد صح',M='مش لازم يكون صح',X='أكيد غلط';
+const F={1:[()=>{ps=['كل '+A+' هم '+B,'كل '+B+' هم '+C];cn='كل '+A+' هم '+C;ok=Y},()=>{ps=['مفيش '+A+' هو '+B,'كل '+C+' هم '+A];cn='مفيش '+C+' هو '+B;ok=Y}],
+2:[()=>{ps=['كل '+A+' هم '+B];cn='كل '+B+' هم '+A;ok=M},()=>{ps=['كل '+A+' هم '+B,'مفيش '+C+' هو '+B];cn='مفيش '+C+' هو '+A;ok=Y}],
+3:[()=>{ps=['كل '+A+' هم '+B,'بعض '+B+' هم '+C];cn='بعض '+A+' هم '+C;ok=M},()=>{ps=['بعض '+A+' هم '+B,'مفيش '+B+' هو '+C];cn='بعض '+A+' مش '+C;ok=Y},()=>{ps=['مفيش '+A+' هو '+B,'كل '+C+' هم '+A];cn='بعض '+C+' هم '+B;ok=X}],
+4:[()=>{ps=['بعض '+A+' هم '+B,'بعض '+B+' هم '+C];cn='بعض '+A+' هم '+C;ok=M},()=>{ps=['كل '+A+' هم '+B,'كل '+B+' هم '+C,'كل '+C+' هم '+D];cn='كل '+D+' هم '+A;ok=M},()=>{ps=['كل '+A+' هم '+B,'كل '+B+' هم '+C,'مفيش '+C+' هو '+D];cn='مفيش '+A+' هو '+D;ok=Y},()=>{ps=['بعض '+A+' هم '+B,'كل '+B+' هم '+C];cn='بعض '+A+' هم '+C;ok=Y}]};
+const f=F[Math.min(4,Math.max(1,d))];f[R(0,f.length-1)]();
+return iqMC(h,say,'الكلمات دي اختراعية، اعتمد على المنطق بس:','<div class="erriddle" style="font-size:15px;line-height:1.9">'+ps.join('<br>')+'<br><b>هل الجملة دي: «'+cn+'» لازم تكون صح؟</b></div>',[{l:Y,v:Y},{l:M,v:M},{l:X,v:X}],ok,ins,'اتخيل دواير بتمثل كل مجموعة')},
+an(h,ins,d,say){const pool=IQ_AN.filter(x=>x[0]===Math.min(4,d)),q=pool[gmR(0,pool.length-1)];return iqMC(h,say,'اختار الكلمة اللي تكمل العلاقة:','<div class="erriddle" style="font-size:19px">'+q[1]+'</div>',ER_SH([q[2]].concat(q[3])).map(x=>({l:x,v:x})),q[2],ins,'حدد العلاقة بين أول كلمتين')},
+cs(h,ins,d,say){const pool=IQ_CS.filter(x=>x[0]===Math.min(4,d)),q=pool[gmR(0,pool.length-1)];return iqMC(h,say,'كلمة واحدة مش من نفس مجموعة الباقي. اختارها:','<div class="erriddle" style="font-size:15px">دور على الكلمة الغريبة</div>',ER_SH(q[1]).map(x=>({l:x,v:x})),q[2],ins,'فكر في الصفة المشتركة بين التلاتة')},
+mx(h,ins,d,say){const R=gmR,sh=ER_SH([0,1,2,3,4]),fo=ER_SH([0,1,2]),cell=(r,c)=>{if(d<=1)return{s:sh[r],n:c+1,f:1};if(d===2)return{s:sh[c],n:r+1,f:1};if(d===3)return{s:sh[c],n:1+(d>=3?0:0),f:fo[r]};return{s:sh[c],n:(r+c)%3+1,f:fo[r]}};
+const cells=[];for(let r=0;r<3;r++)for(let c=0;c<3;c++)cells.push(cell(r,c));const A=cells[8],key=o=>o.s+'-'+o.n+'-'+o.f,seen=new Set([key(A)]),opts=[A];
+const vars=[()=>({s:(A.s+R(1,4))%5,n:A.n,f:A.f}),()=>({s:A.s,n:(A.n%3)+1,f:A.f}),()=>({s:A.s,n:A.n,f:(A.f+R(1,2))%3}),()=>({s:(A.s+R(1,4))%5,n:(A.n%3)+1,f:A.f}),()=>({s:A.s,n:(A.n+R(0,1))%3+1,f:(A.f+1)%3}),()=>({s:(A.s+R(1,4))%5,n:A.n,f:(A.f+R(1,2))%3})];
+let g=0;while(opts.length<6&&g++<200){const o=vars[R(0,vars.length-1)]();if(d<=2)o.f=1;if(!seen.has(key(o))){seen.add(key(o));opts.push(o)}}
+if(opts.length<6){let g2=0;while(opts.length<6&&g2++<300){const o={s:R(0,4),n:R(1,3),f:d<=2?1:R(0,2)};if(!seen.has(key(o))){seen.add(key(o));opts.push(o)}}}
+const os=ER_SH(opts);say('الشكل الناقص بيكمل القاعدة. اختاره:');
+h.innerHTML='<div class="mxg">'+cells.slice(0,8).map(c=>'<div>'+mxCell(c,62)+'</div>').join('')+'<div style="display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;color:#e65100">؟</div></div><div class="mxo">'+os.map((o,j)=>'<button class="erop" data-j="'+j+'">'+mxCell(o,54)+'</button>').join('')+'</div>';
+h.querySelectorAll('.erop').forEach(b=>b.onclick=()=>{if(key(os[+b.dataset.j])===key(A))ins();else erWrong(h)});
+return{solve(){h.querySelector('.erop[data-j="'+os.findIndex(o=>key(o)===key(A))+'"]').click()},hint(){return 'بص على كل صف وكل عمود'}}},
+wm(h,ins,d,say){const R=gmR,len=[4,5,5,6][Math.min(3,Math.max(0,d-1))],back=d>=3,seq=Array.from({length:len},()=>R(0,9));let cur=[],busy=true;
+const want=()=>back?seq.slice().reverse():seq;
+h.innerHTML='<div class="wmbox" id="wmb">…</div><div class="wmpad" id="wmp" style="display:none">'+[1,2,3,4,5,6,7,8,9,0].map(n=>'<button class="erop" data-n="'+n+'">'+n+'</button>').join('')+'<button class="erop" id="wmc">مسح</button></div><div id="wmo" class="erenc" dir="ltr" style="min-height:34px;letter-spacing:6px"></div>';
+say('ركز في الأرقام اللي هتظهر واحد واحد...');const box=el('wmb');
+seq.forEach((n,k)=>{erT(()=>{box.textContent=n;box.style.opacity=1;memTone(400+n*40,0,.08,'sine',.07)},900+k*900);erT(()=>{box.style.opacity=.15},900+k*900+650)});
+erT(()=>{box.textContent=back?'اكتبهم بالعكس ↩️':'اكتبهم بنفس الترتيب';box.style.opacity=1;el('wmp').style.display='grid';busy=false;say(back?'اكتب الأرقام بالترتيب المعكوس (من الآخر للأول):':'اكتب الأرقام بنفس الترتيب:')},900+len*900+200);
+const upd=()=>{el('wmo').textContent=cur.join(' ')};
+h.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{if(busy)return;cur.push(+b.dataset.n);upd();if(cur.length===len){const w=want();if(cur.every((v,i)=>v===w[i]))ins();else erWrong(h)}});el('wmc').onclick=()=>{cur=[];upd()};
+return{solve(){busy=false;want().forEach(n=>{cur.push(n)});cur=want();const w=want();ins()},hint(){return 'كرر الأرقام في دماغك'}}}
+});
+/* number rule rows (mi) */
+ER_P.mi=function(h,ins,d,say){const R=gmR,F={1:(a,b)=>a+b,2:(a,b)=>a*b,3:(a,b)=>a*b-(a+b),4:(a,b)=>a*b+a-b},f=F[Math.min(4,Math.max(1,d))],rows=[];
+for(let i=0;i<4;i++){const a=R(2,9),b=R(2,9);rows.push([a,b,f(a,b)])}
+const ans=rows[3][2];return iqMC(h,say,'في قاعدة واحدة بتربط كل صف. اكتشفها وجاوب:','<div class="erenc" dir="ltr" style="font-size:22px;line-height:1.7">'+rows.slice(0,3).map(r=>r[0]+' ، '+r[1]+' ← '+r[2]).join('<br>')+'<br>'+rows[3][0]+' ، '+rows[3][1]+' ← ؟</div>',iqNumOpts(ans,[rows[3][0]+rows[3][1],rows[3][0]*rows[3][1]]),ans,ins,'جرب الجمع والضرب والطرح بين الرقمين')};
+/* ===== test engine ===== */
+let IQ={};
+const iqLim=(ty,d)=>({slide:150,lights:120,code:120,path:110,eq:110,simon:120,pat:100,wm:100,riddle:100,seq:100,cipher:110,bin:120,sort:120,mx:100,wp:120,lg:110,sy:100}[ty]||90)+(d>=4?30:0);
+const iqP=(t,b)=>1/(1+Math.exp(-(t-b)));
+function iqSetup(){memStop();MEM.v='glv';const b=el('memv'),best=gxBest('iq');
+b.innerHTML='<div class="mst"><span>🧠 Test your IQ</span></div><p class="cm" style="margin:0 0 6px">ألغاز متنوعة في 5 مهارات (أرقام · منطق · لغة · مكاني · ذاكرة). الصعوبة بتتظبط حسب أدائك، ومفيش تلميحات. في الآخر هتشوف تقدير لمستواك مع ملف قدراتك.</p>'
++'<div class="mg1 iqs" data-n="10" style="margin-top:9px"><i>⚡</i><div><b>اختبار قصير</b><small>10 ألغاز · حوالي 8 دقايق · دقة أقل</small></div></div><div class="mg1 iqs" data-n="20" style="margin-top:9px"><i>🎯</i><div><b>اختبار كامل</b><small>20 لغز · حوالي 18 دقيقة · دقة أعلى</small></div></div>'
++'<div class="cm" style="text-align:center;margin-top:10px">🏆 أعلى تقدير ليك: '+(best?best:'-')+'</div><p class="cm" style="font-size:12px;margin:8px 0">⚠️ التقييم ده تقدير استرشادي للتفكير المنطقي، مش اختبار ذكاء رسمي ومش تشخيص. بيتأثر بالتركيز والتعب.</p><button class="mbtn o" id="glb" style="margin-top:8px">رجوع</button>';
+b.querySelectorAll('.iqs').forEach(x=>x.onclick=()=>{if(gmOpen())iqStart(+x.dataset.n);else{MEM.v='list';memDraw()}});el('glb').onclick=()=>{MEM.v='list';memDraw()}}
+function iqStart(n){memStop();const plan=[];for(let k=0;k<n/5;k++)plan.push(...ER_SH(Object.keys(IQ_DOM)));
+ER={alive:true,id:++GXID,mode:'iq',n:n,i:0,dl:Date.now()+9e9,hints:0,skips:0,tos:[],lock:false,plan:plan,items:[],th:0,used:[],wr:0};GX={alive:true,id:ER.id,k:'er'};iqRoom()}
+function iqRoom(){erClear();ER.lock=false;ER.alive=true;ER.wr=0;const i=ER.i,dom=ER.plan[i],pool=IQ_DOM[dom].filter(t=>ER.used.slice(-3).indexOf(t)<0),ty=pool[gmR(0,pool.length-1)]||IQ_DOM[dom][0];
+let d=1,bd=9;[1,2,3,4].forEach(k=>{const e=Math.abs(IQ_B[k]-ER.th);if(e<bd){bd=e;d=k}});if(Math.random()<.2)d=Math.max(1,Math.min(4,d+(Math.random()<.5?-1:1)));if(i<2)d=Math.min(d,2);
+ER.used.push(ty);ER.d=d;ER.ty=ty;ER.dom=dom;ER.single=IQ_SINGLE.has(ty);ER.lim=iqLim(ty,d);ER.t0=Date.now();MEM.v='gplay';const b=el('memv');
+b.innerHTML='<div class="erh"><span id="ert">⏱ '+memT(ER.lim)+'</span><span id="erpn" class="erpn"></span><span>🧠 لغز '+(i+1)+'/'+ER.n+'</span></div><div class="erbar"><i style="width:'+(i/ER.n*100)+'%"></i></div><div class="erroom" style="position:relative"><div id="memfx" class="mfx"></div><div class="ertit"><span>'+IQ_DN[dom].split(' ')[0]+'</span> '+IQ_DN[dom].split(' ')[1]+'</div><div class="erpz">'+ER_T[ty]+'</div><p class="erins" id="erins"></p><div id="erp" class="erp"></div></div><div class="erbt"><button class="mbtn o" id="erskip">⏭ تخطي (بدون نقاط)</button></div><button class="mbtn o" id="gend" style="margin-top:6px">إنهاء الاختبار</button>';
+el('gend').onclick=()=>{memStop();MEM.v='list';memDraw()};
+ER.tm=setInterval(()=>{if(!ER.alive)return;const l=Math.ceil((ER.lim*1000-(Date.now()-ER.t0))/1000),t=el('ert');if(t){t.textContent='⏱ '+memT(Math.max(0,l));t.classList.toggle('lw',l<=15)}if(l<=0)iqFinish(0)},250);
+ER.cur=ER_P[ty](el('erp'),erDone,d,t=>{const e=el('erins');if(e)e.textContent=t});el('erskip').onclick=()=>{if(ER.lock)return;ER.skips++;iqFinish(0)}}
+function iqFinish(ok){if(ER.lock||!ER.alive||ER.mode!=='iq')return;ER.lock=true;clearInterval(ER.tm);const sec=(Date.now()-ER.t0)/1000;let cr=ok?Math.max(.4,1-.2*ER.wr):0;if(ok&&sec>ER.lim*.75)cr*=.9;
+ER.items.push({ty:ER.ty,dom:ER.dom,d:ER.d,cr:cr,wr:ER.wr,sec:sec});ER.th+=(1.3/(1+.12*ER.items.length))*(cr-iqP(ER.th,IQ_B[ER.d]));ER.th=Math.max(-3.5,Math.min(3.5,ER.th));
+if(ok)memSound('win');else memTone(210,0,.2,'sine',.12);const fx=el('memfx');if(fx){const o=document.createElement('div');o.className='erdoor';o.innerHTML='<b>'+(ok?'✔':'➜')+'</b><span>'+(ok?'تمام':'اللغز الجاي')+'</span>';fx.appendChild(o)}
+const id=ER.id,r=ER.i;setTimeout(()=>{if(ER.id!==id||ER.i!==r||!ER.alive)return;ER.i++;if(ER.i>=ER.n)iqEnd();else iqRoom()},650)}
+function iqEnd(){if(!ER.alive)return;ER.alive=false;erClear();const it=ER.items,f=t=>it.reduce((s,x)=>s+(x.cr-iqP(t,IQ_B[x.d])),0);let lo=-4,hi=4;for(let k=0;k<40;k++){const m=(lo+hi)/2;if(f(m)>0)lo=m;else hi=m}const th=(lo+hi)/2,inf=it.reduce((s,x)=>{const p=iqP(th,IQ_B[x.d]);return s+p*(1-p)},0),se=Math.min(1.3,1/Math.sqrt(Math.max(inf,.2)));
+const iq=Math.round(Math.max(55,Math.min(145,100+15*th))),lo2=Math.max(55,Math.round(iq-1.96*15*se)),hi2=Math.min(145,Math.round(iq+1.96*15*se));
+const erf=x=>{const s=x<0?-1:1;x=Math.abs(x);const t=1/(1+.3275911*x),y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-x*x);return s*y},pc=Math.round(50*(1+erf((iq-100)/15/Math.SQRT2)));
+const band=iq>=130?'تفكير متفوق جدًا':iq>=115?'فوق المتوسط':iq>=85?'في المتوسط':'تحت المتوسط حاليًا';
+const dm={};Object.keys(IQ_DOM).forEach(k=>{const a=it.filter(x=>x.dom===k),w=a.reduce((s,x)=>s+1+.5*(x.d-1),0);dm[k]=a.length?Math.round(100*a.reduce((s,x)=>s+x.cr*(1+.5*(x.d-1)),0)/w):0});
+const ks=Object.keys(dm).sort((a,b)=>dm[b]-dm[a]),okn=it.filter(x=>x.cr>=.6).length,best=gxBest('iq'),nb=iq>best;gxBest('iq',iq);
+const bars=Object.keys(IQ_DOM).map(k=>'<div style="display:flex;align-items:center;gap:8px;margin:5px 0;font-size:13px;font-weight:800"><span style="width:84px;text-align:right">'+IQ_DN[k]+'</span><div style="flex:1;height:10px;background:#f2d9c6;border-radius:6px;overflow:hidden"><i style="display:block;height:100%;width:'+dm[k]+'%;background:linear-gradient(90deg,#ff8a33,#ff6600)"></i></div><span style="width:36px">'+dm[k]+'%</span></div>').join('');
+gxRes({e:'🧠',t:(nb&&best?'رقم قياسي! ':'')+'تقديرك: IQ ≈ '+iq,s:[[lo2+' – '+hi2,'المدى المحتمل'],[okn+' من '+it.length,'ألغاز صح'],[pc+'%','أعلى من عموم الناس (تقدير)']],w:iq>=115,f:()=>iqSetup(),
+x:'<div style="background:#fff3ea;border:1px solid #f1d9c8;border-radius:12px;padding:10px 12px;margin:10px 0;text-align:right"><div style="font-weight:900;margin-bottom:4px">ملف قدراتك · '+band+'</div>'+bars+'<div class="cm" style="margin-top:6px">أقوى مهارة: <b>'+IQ_DN[ks[0]]+'</b> · الأضعف: <b>'+IQ_DN[ks[ks.length-1]]+'</b></div></div><p class="cm" style="font-size:12px;text-align:right">⚠️ تقدير استرشادي من '+it.length+' لغز، مش اختبار ذكاء رسمي ومش تشخيص. المدى بيوضح هامش الخطأ، وبيضيق كل ما كان الاختبار أطول (الكامل أدق). النتيجة بتتأثر بالتركيز والتعب.</p>'})}
+
 </script>
 <script>
 /* ===== Portfolio (login + customer follow-up) ===== */
