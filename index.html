@@ -320,10 +320,10 @@ body{padding-top:0!important;padding-bottom:var(--nwh,0px)!important}.chips{top:
 #intro .qa{font-size:15px!important;border-radius:20px!important;transition:transform .18s,box-shadow .18s}
 #intro .qa:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(255,102,0,.2)}
 .qa span{width:50px!important;height:50px!important;font-size:26px!important;margin-bottom:8px!important}
-#intro .hl>.sh:nth-child(6){grid-column:1;grid-row:6}
-#intro .hl>.ts{grid-column:1;grid-row:7;min-height:136px!important;max-height:none!important;margin:0;padding:14px 28px!important;gap:22px!important;cursor:pointer}#intro .hl>.hs2{grid-column:1;grid-row:7;margin:0}
-#intro .hl>.sh:nth-child(8){grid-column:2;grid-row:6}
-#intro .hl>.pg{grid-column:2;grid-row:7;grid-auto-rows:136px!important;gap:14px!important}
+#intro .hl>.hsh{grid-column:1;grid-row:7}
+#intro .hl>.ts{grid-column:1;grid-row:7;min-height:136px!important;max-height:none!important;margin:0;padding:14px 28px!important;gap:22px!important;cursor:pointer}#intro .hl>.hs2{grid-column:1;grid-row:8;margin:0}
+#intro .hl>.mph{grid-column:2;grid-row:7}
+#intro .hl>.pg{grid-column:2;grid-row:8;grid-auto-rows:136px!important;gap:14px!important}
 #intro .ts .tc{width:84px!important;height:84px!important;font-size:42px!important}
 #intro .ts .tm small{font-size:15px}
 #intro .ts .tm b{font-size:30px!important}
@@ -379,10 +379,10 @@ body{padding-top:0!important;padding-bottom:var(--nwh,0px)!important}.chips{top:
 #intro>.hl{grid-column:2;grid-row:1;width:100%;max-width:none;margin:0;position:relative;z-index:1}
 #intro>.side{display:flex;flex-direction:column;gap:14px;position:sticky;top:24px;align-self:start;margin-top:24px;z-index:1}
 #intro>#sideR{grid-column:1;grid-row:1}#intro>#sideL{grid-column:3;grid-row:1}
-#intro .hl>.sh:nth-child(6){grid-column:1/-1;grid-row:6}
-#intro .hl>.ts{grid-column:1/-1;grid-row:7;min-height:120px!important}#intro .hl>.hs2{grid-column:1/-1;grid-row:7}
-#intro .hl>.sh:nth-child(8){grid-column:1/-1;grid-row:8}
-#intro .hl>.pg{grid-column:1/-1;grid-row:9;grid-auto-rows:124px!important}
+#intro .hl>.hsh{grid-column:1/-1;grid-row:7}
+#intro .hl>.ts{grid-column:1/-1;grid-row:7;min-height:120px!important}#intro .hl>.hs2{grid-column:1/-1;grid-row:8}
+#intro .hl>.mph{grid-column:1/-1;grid-row:9}
+#intro .hl>.pg{grid-column:1/-1;grid-row:10;grid-auto-rows:124px!important}
 #intro .qa{font-size:13.5px!important}
 .pt{font-size:13.5px!important}
 #cdBox .nx{width:100%;min-width:0;box-sizing:border-box;padding-inline:10px}
@@ -733,7 +733,7 @@ if(!skip&&!IOS)setTimeout(function(){tryBio(true)},500);
 <div class="bn" id="bn"><div class="bs on" data-k="top"><div><small>⭐ نجم الشهر</small><b>Top Performance</b><i>🏆 أحسن Sales وأحسن Telesales</i></div><div class="bc">🏆</div></div><div class="bs" data-k="week" id="bsWeek"><div><small>⭐ نجم الأسبوع</small><b>The King of Info</b><i>👑 اضغط وشوف مين الملك</i></div><div class="bc">🌟</div></div><div class="bs" data-k="w"><div><small>Aptelecom</small><b>أهلاً بيك في دليل Orange Business</b><i>Training team</i></div><div class="bc">🟧</div></div><button class="bnnav bnnext" id="bnnext" aria-label="التالي">‹</button><div class="dt"><u class="on"></u><u></u><u></u></div></div>
 <div class="sh">Quick Access</div><div class="qg"><div class="qa" id="go"><span>🟧</span>Orange Business</div><div class="qa" id="gs"><span>🎯</span>Sales Skills</div><div class="qa" id="gc"><span>💰</span>Commission</div><div class="qa" id="gb"><span>🧾</span>Bill</div><div class="qa" id="gts"><span>📞</span>Telesales</div><div class="qa" id="gv"><span>📋</span>Reporting</div><div class="qa" id="gt"><span>⏰</span>To Do List</div></div><div class="qa pfwide" id="gpf" role="button" tabindex="0"><span>📁</span>Portfolio <i>🔒</i></div>
 <div class="sh hsh"><span>Weekly high score</span><span>Sales activity · النهارده</span></div><div class="hs2"><div class="ts" id="ts"></div><div class="act" id="actc" role="button" tabindex="0"><div class="ar"><div class="am ao"><small>📞 مكالمات</small><b id="ac0">–</b></div><div class="am ab"><small>🚶 زيارات</small><b id="av0">–</b></div></div><div class="al">إجمالي الشهر</div><div class="ar"><div class="am ao m2"><small>📞 مكالمات</small><b id="acm">–</b></div><div class="am ab m2"><small>🚶 زيارات</small><b id="avm">–</b></div></div><div class="ag">📊 شوف الداشبورد ‹</div></div><div class="wch" id="wch"></div></div>
-<div class="sh">My Progress</div><div class="pg" id="pg"></div></div>
+<div class="sh mph">My Progress</div><div class="pg" id="pg"></div></div>
 <button id="gst" style="display:none"></button>
 </section>
 <div id="ins"><div class="ib"><button class="ix" id="inx" aria-label="Close">✕</button><div class="ih">Install App</div><div class="itb"><button class="it" data-k="a">🤖 Android</button><button class="it" data-k="i">🍎 iPhone</button></div>
