@@ -2592,8 +2592,8 @@ function memCombo(t){const fx=el('memfx');if(!fx)return;const s=document.createE
 function memFace(c){return c.n?'<div class="mb mbn"><small>'+esc(c.n[0])+'</small><b dir="ltr">'+esc(c.n[1])+'</b></div>':c.i?'<div class="mb mbi"><b dir="ltr">'+esc(c.i[0])+'</b>'+(c.i[1]?'<small>'+esc(c.i[1])+'</small>':'')+'</div>':'<div class="mb">'+c.e+'</div>'}
 function memDraw(){const b=el('memv');if(!b)return;
 if(MEM.v==='list'){const bs=memBest(),best=Object.keys(bs).length?Math.min(...Object.values(bs).map(x=>x.m)):0,op=gmOpen(),G=[['lu','🎲','Ludo · لودو','قواعد مصرية · ضد الكمبيوتر أو أونلاين'],['er','🧠','Test your IQ','ألغاز متنوعة وتقدير لمستواك في الآخر'],['st','🏗️','Stack Tower','ابني أعلى برج بالتوقيت'],['ac','✈️','Sky War','معارك جوية · زعماء ومراحل وقنابل'],['tc','🎖️','Tank Clash','معركة دبابات واستيلاء على الأرض · ضد الكمبيوتر'],['ch','♟️','Chess · شطرنج','8 مستويات لحد الأسطورة · ضد الكمبيوتر'],['fr','🚀','Flappy Rocket','طيّر الصاروخ وسط الكويكبات'],['gp','💎','Gem Pop','ثلاث جواهر متطابقة']];
-b.innerHTML='<div class="mg1" id="memgo"><i>🃏</i><div><b>Memory Match</b><small>مفتوحة دايمًا</small></div></div><div class="mg1" id="orgo" style="margin-top:9px"><i>🏃</i><div><b>Orange Rush</b><small>اجري وجاوب أسئلة · مفتوحة دايمًا</small></div></div>'+G.map(g=>'<div class="mg1 gmc'+(op?'':' lk')+'" data-g="'+g[0]+'" style="margin-top:9px"><i>'+g[1]+'</i><div><b>'+g[2]+'</b><small>'+g[3]+'</small></div>'+(op?'':'<span style="margin-inline-start:auto;font-size:20px">🔒</span>')+'</div>').join('')+'<div class="gcd" id="gmcd" data-o="'+(op?1:0)+'">'+gmCdHtml(op)+'</div>'+(isTest()?'<div class="gtst">🧪 الوضع التجريبي شغال: الألعاب مفتوحة</div>':'')+(best?'<div class="cm" style="text-align:center;margin-top:12px">🏆 أحسن نتيجة في Memory Match: '+best+' حركة</div>':'');
-el('memgo').onclick=()=>{MEM.v='setup';memDraw()};el('orgo').onclick=()=>orStart();b.querySelectorAll('.gmc').forEach(x=>x.onclick=()=>{if(gmOpen())gmStart(x.dataset.g);else{x.classList.add('shk');setTimeout(()=>x.classList.remove('shk'),400)}});
+b.innerHTML='<div class="mg1" id="memgo"><i>🃏</i><div><b>Memory Match</b><small>مفتوحة دايمًا</small></div></div><div class="mg1" id="orgo" style="margin-top:9px"><i>🏃</i><div><b>Orange Rush</b><small>اجري وجاوب أسئلة · مفتوحة دايمًا</small></div></div>'+G.map(g=>{const op=gmOpen()||g[0]==='er';return '<div class="mg1 gmc'+(op?'':' lk')+'" data-g="'+g[0]+'" style="margin-top:9px"><i>'+g[1]+'</i><div><b>'+g[2]+'</b><small>'+g[3]+'</small></div>'+(op?'':'<span style="margin-inline-start:auto;font-size:20px">🔒</span>')+'</div>'}).join('')+'<div class="gcd" id="gmcd" data-o="'+(op?1:0)+'">'+gmCdHtml(op)+'</div>'+(isTest()?'<div class="gtst">🧪 الوضع التجريبي شغال: الألعاب مفتوحة</div>':'')+(best?'<div class="cm" style="text-align:center;margin-top:12px">🏆 أحسن نتيجة في Memory Match: '+best+' حركة</div>':'');
+el('memgo').onclick=()=>{MEM.v='setup';memDraw()};el('orgo').onclick=()=>orStart();b.querySelectorAll('.gmc').forEach(x=>x.onclick=()=>{if(gmOpen()||x.dataset.g==='er')gmStart(x.dataset.g);else{x.classList.add('shk');setTimeout(()=>x.classList.remove('shk'),400)}});
 clearInterval(GM.cd);if(!GM.got)gmSync();GM.cd=setInterval(()=>{const c=el('gmcd');if(!c){clearInterval(GM.cd);return}const o=gmOpen();if((o?1:0)!==+c.dataset.o){memDraw();return}c.innerHTML=gmCdHtml(o)},1000)}
 else if(MEM.v==='setup'){const sp=(k,t,c)=>'<span data-h="'+k+'" class="'+(c||'')+(MEM.th===k?' on':'')+'">'+t+'</span>';
 b.innerHTML='<div class="qz"><div style="font-weight:800;margin-bottom:6px">المستوى</div><div class="mlv">'+[1,2,3].map(k=>'<div data-l="'+k+'" class="'+(MEM.lv===k?'on':'')+'">'+MEM_LV[k][2]+'<small>'+MEM_LV[k][0]+' أزواج</small></div>').join('')+'</div><div style="font-weight:800;margin:16px 0 6px">📦 الباقات (اسم الباقة ↔ معلومتها)</div><div class="mth">'+sp('all','📦 كل الباقات','pk')+Object.keys(MEM_PK).map(k=>sp(k,MEM_PK[k],'pk')).join('')+'</div><p class="cm" style="margin:12px 0 0">كل مرة الترتيب وشكل ظهر الكروت بيتغيروا. الباقة اللي أزواجها أقل من المستوى بتلعب بأقصى عدد متاح.</p><button class="mbtn" id="memstart">ابدأ اللعب ▶</button><button class="mbtn o" id="memback">رجوع</button></div>';
@@ -2909,9 +2909,9 @@ const TC_T=[
 {k:'rkt',n:'صواريخ',c:4,hp:75,sp:11,rg:170,dm:30,cd:2.2,cnt:1,r:10,spl:30,mn:48},
 {k:'meg',n:'ميجا',c:6,hp:480,sp:10,rg:108,dm:34,cd:1.1,cnt:1,r:15,spl:18},
 {k:'air',n:'غارة',c:5}];
-const TC_DF=[['سهل','🙂',.5,3.3],['متوسط','😎',1,1.7],['صعب','😈',1.2,1.05]];
+const TC_DF=[['سهل','🙂',.5,3.3,.9,5],['متوسط','😎',1,1.7,1,5],['صعب','😈',1.35,.8,1.1,6],['كابوس','👹',1.8,.45,1.3,10]];
 function tcSetup(){memStop();MEM.v='glv';const b=el('memv');let d=1;try{d=+(localStorage.getItem('tc_d')||1)}catch(e){}
-b.innerHTML='<div class="mst"><span>🎖️ Tank Clash</span><span>🏆 '+gxBest('tc')+'</span></div><div class="qz" style="text-align:center"><p style="margin:4px 0 10px;line-height:1.8">سيطر على أكبر مساحة وانسف قاعدة الكمبيوتر! نزّل جنود ودبابات وصواريخ على أرضك، وكل وحدة بتتقدم بتاخد أرض جديدة وتوسّع المكان اللي تقدر تنزل فيه.</p><div style="font-weight:800;margin:6px 0">الصعوبة</div><div class="mlv" id="tcd">'+TC_DF.map((q,i)=>'<div data-d="'+i+'" class="'+(d===i?'on':'')+'">'+q[1]+'<br>'+q[0]+'</div>').join('')+'</div></div><button class="mbtn" id="tcgo">ابدأ المعركة ⚔️</button><button class="mbtn o" id="glb">رجوع للألعاب</button>';
+b.innerHTML='<div class="mst"><span>🎖️ Tank Clash</span><span>🏆 '+gxBest('tc')+'</span></div><div class="qz" style="text-align:center"><p style="margin:4px 0 10px;line-height:1.8">سيطر على أكبر مساحة وانسف قاعدة الكمبيوتر! نزّل جنود ودبابات وصواريخ على أرضك، وكل وحدة بتتقدم بتاخد أرض جديدة وتوسّع المكان اللي تقدر تنزل فيه.</p><div style="font-weight:800;margin:6px 0">الصعوبة</div><div class="mlv" id="tcd" style="grid-template-columns:repeat(4,1fr)">'+TC_DF.map((q,i)=>'<div data-d="'+i+'" class="'+(d===i?'on':'')+'">'+q[1]+'<br>'+q[0]+'</div>').join('')+'</div></div><button class="mbtn" id="tcgo">ابدأ المعركة ⚔️</button><button class="mbtn o" id="glb">رجوع للألعاب</button>';
 document.querySelectorAll('#tcd div').forEach(e=>e.onclick=()=>{d=+e.dataset.d;document.querySelectorAll('#tcd div').forEach(z=>z.classList.toggle('on',z===e));try{localStorage.setItem('tc_d',d)}catch(x){}});
 el('tcgo').onclick=()=>tcRun(d);el('glb').onclick=()=>{MEM.v='list';memDraw()}}
 function tcRun(df){memStop();const F=gxFrame('🎖️ Tank Clash · '+TC_DF[df][0],'اختار كارت ثم دوس على أرضك (الزرقا) · الوحدات بتتقدم لوحدها وتاخد أرض · دمّر قاعدة الكمبيوتر','tc'),x=F.x,c=F.c,W=360,H=520;
@@ -2922,7 +2922,7 @@ const rr=(a,b)=>a+rnd()*(b-a);
 G.own=new Uint8Array(N);G.fl=new Float32Array(N);
 for(let i=0;i<N;i++){const r=Math.floor(i/COLS);G.own[i]=r<=2?2:r>=ROWS-3?1:0}
 G.u=[];G.pj=[];G.pt=[];G.cr=[];G.st=[];G.q=[];G.uid=0;G.en={b:5,r:5};G.rg={b:0,r:0};G.fr={b:0,r:0};G.sel=1;G.shk=0;G.kills=0;G.lost=0;G.nextCr=9;G.aiT=3;G.snd=0;G.ef=0;G.hov=-1;G.msg=null;
-G.hq={b:{x:180,y:FY+ROWS*S-S/2,hp:1800,mh:1800,cd:0,fl:0},r:{x:180,y:FY+S/2,hp:1800,mh:1800,cd:0,fl:0}};
+G.en.r=TC_DF[df][5];G.pxT=0;G.hq={b:{x:180,y:FY+ROWS*S-S/2,hp:1800,mh:1800,cd:0,fl:0},r:{x:180,y:FY+S/2,hp:1800,mh:1800,cd:0,fl:0}};
 G.deco=[];for(let i=0;i<46;i++)G.deco.push([Math.random()*W,FY+Math.random()*ROWS*S,Math.random()*3+1.5,Math.random()]);
 const hud=()=>{const e=el('gxs');if(e)e.textContent='⭐ '+(G.kills*10)};
 const cellOf=(px,py)=>{const cx=Math.floor(px/S),cy=Math.floor((py-FY)/S);return cx<0||cy<0||cx>=COLS||cy>=ROWS?-1:cy*COLS+cx};
@@ -2932,7 +2932,7 @@ G.pt.push({k:'s',x:px,y:py,vx:(Math.random()-.5)*10,vy:-16-Math.random()*14,l:.9
 if(big){G.shk=Math.max(G.shk,Math.min(.35,r/60))}};
 const hurt=(u,a,by)=>{if(u.dead)return;u.hp-=a;u.fl=.1;if(u.hp<=0){u.dead=true;const sp=TC_T[u.t];boom(u.x,u.y,sp.r*1.8+6,sp.r>=10);if(u.t===0)G.pt.push({k:'b',x:u.x,y:u.y,l:.25,m:.25,r:10});sound(sp.r>=10?110:170,.35,'sawtooth',.14);if(u.s==='r'){G.kills++;hud()}else G.lost++}};
 const hqHurt=(s,a)=>{const h=G.hq[s];if(h.hp<=0)return;h.hp-=a;h.fl=.12;if(h.hp<=0){h.hp=0;for(let i=0;i<8;i++)boom(h.x+(Math.random()-.5)*50,h.y+(Math.random()-.5)*40,26,true);G.shk=.7;sound(90,.6,'sawtooth',.25);finish(s==='r')}};
-const spawn=(s,t,px,py)=>{const sp=TC_T[t],n=sp.cnt;for(let i=0;i<n;i++){const ox=n>1?(i-1)*11:0,oy=n>1?((i%2)*8-4)*(s==='b'?1:-1):0;G.u.push({id:++G.uid,s:s,t:t,x:px+ox,y:py+oy,hp:sp.hp,mh:sp.hp,cd:Math.random()*.4,hd:s==='b'?-1.5708:1.5708,ta:s==='b'?-1.5708:1.5708,tg:0,fl:0,rc:0,dead:false,mv:0,sd:Math.random()*6})}};
+const spawn=(s,t,px,py)=>{const sp=TC_T[t],n=sp.cnt;for(let i=0;i<n;i++){const ox=n>1?(i-1)*11:0,oy=n>1?((i%2)*8-4)*(s==='b'?1:-1):0;G.u.push({id:++G.uid,s:s,t:t,x:px+ox,y:py+oy,hp:sp.hp*(s==='r'?TC_DF[df][4]:1),mh:sp.hp*(s==='r'?TC_DF[df][4]:1),cd:Math.random()*.4,hd:s==='b'?-1.5708:1.5708,ta:s==='b'?-1.5708:1.5708,tg:0,fl:0,rc:0,dead:false,mv:0,sd:Math.random()*6})}};
 const apply=q=>{if(G.over)return;const s=q.s;if(q.t===4){const free=G.fr[s]>0;if(!free&&G.en[s]<5)return;if(free)G.fr[s]--;else G.en[s]-=5;G.st.push({s:s,x:q.x,y:q.y,t:.95,n:0});return}
 const sp=TC_T[q.t];if(G.en[s]<sp.c)return;if(G.u.filter(u=>u.s===s&&!u.dead).length>=LIM)return;const ci=cellOf(q.x,q.y);if(ci<0||G.own[ci]!==(s==='b'?1:2))return;G.en[s]-=sp.c;
 const cx=(ci%COLS)*S+S/2,cy=FY+Math.floor(ci/COLS)*S+S/2;spawn(s,q.t,cx+rr(-8,8),cy+rr(-8,8));G.fl[ci]=.4;if(s==='b'){sound(420,.08,'triangle',.1)}};
@@ -2955,22 +2955,29 @@ if(G.en.b<TC_T[t].c){G.ef=.5;memTone(150,0,.15,'square',.1);return}G.q.push({s:'
 c.onpointermove=e=>{const p=pos(e);G.hov=p[1]>=FY&&p[1]<CY?cellOf(p[0],p[1]):-1};
 G.kd=e=>{if(e.key>='1'&&e.key<='5'){G.sel=+e.key-1}};GX.kd=G.kd;document.addEventListener('keydown',GX.kd);
 /* ---- AI ---- */
-const ai=()=>{if(G.over)return;const s='r',e=G.en.r;if(G.u.filter(u=>u.s==='r'&&!u.dead).length>=LIM)return;
-const foe=G.u.filter(u=>u.s==='b'&&!u.dead),n=[0,0,0,0];foe.forEach(u=>n[u.t]++);
-if((G.fr.r>0||e>=5)&&(df>0||rnd()<.3)){let best=null,bc=0;foe.forEach(u=>{let k=0;foe.forEach(v=>{if(Math.abs(v.x-u.x)<36&&Math.abs(v.y-u.y)<36)k+=v.t===3?4:v.t===1?2:1});if(k>bc){bc=k;best=u}});
-if(best&&bc>=(df===2?5:7)){G.q.push({s:'r',t:4,x:best.x,y:best.y});return}}
-let t=-1;const my=G.u.filter(u=>u.s==='r'&&!u.dead).length;
-if(n[0]>=4&&e>=4)t=2;else if(n[3]>=1&&e>=6)t=3;else if(n[1]>=2&&e>=2)t=0;else if(n[2]>=1&&e>=2)t=0;
-if(t<0){const w=[];if(e>=2)w.push(0,0);if(e>=3)w.push(1,1,1);if(e>=4)w.push(2);if(e>=6&&(df>0||rnd()<.5))w.push(3,3);if(df===2&&e<8&&my>2){return}if(!w.length)return;t=w[Math.floor(rnd()*w.length)]}
+const ai=(s,d)=>{if(G.over)return;const o=s==='b'?'r':'b',e=G.en[s],mine=G.u.filter(u=>u.s===s&&!u.dead);if(mine.length>=LIM)return;
+const foe=G.u.filter(u=>u.s===o&&!u.dead),n=[0,0,0,0];foe.forEach(u=>n[u.t]++);const dy=s==='r'?1:-1,hq=G.hq[s];
+const prog=u=>s==='r'?u.y:-u.y;
+const thr=foe.filter(u=>(s==='r'?u.y>FY+S*3.2:u.y<FY+S*(ROWS-3.2)));
+if((G.fr[s]>0||e>=5)&&(d>0||rnd()<.3)){let best=null,bc=0;foe.forEach(u=>{let k=0;foe.forEach(v=>{if(Math.abs(v.x-u.x)<38&&Math.abs(v.y-u.y)<38)k+=v.t===3?4:v.t===2?3:v.t===1?2:1});if(Math.hypot(u.x-hq.x,u.y-hq.y)<130)k+=2;if(k>bc){bc=k;best=u}});
+if(best&&bc>=(d>=3?4:d===2?5:7)){G.q.push({s:s,t:4,x:best.x,y:best.y});return}}
+const w=[3,3,2,1];if(n[0]>=3){w[2]+=4;w[3]+=2;w[1]+=1}if(n[1]>=2){w[0]+=4;w[3]+=2}if(n[2]>=1){w[0]+=3}if(n[3]>=1){w[0]+=3;w[2]+=1;w[1]+=1}
+if(thr.length>=2){w[1]+=2;w[0]+=1}
+let t=-1;if(d>=2){let bw=-1;for(let i=0;i<4;i++){const v=w[i]+(rnd()*(d===3?.5:1.5));if(v>bw){bw=v;t=i}}
+if(e<TC_T[t].c){if(e<9&&(t===3||t===2||rnd()<.6))return;const aff=[0,1,2,3].filter(i=>TC_T[i].c<=e);if(!aff.length)return;t=aff[Math.floor(rnd()*aff.length)]}}
+else{const aff=[];for(let i=0;i<4;i++)if(TC_T[i].c<=e&&(d>0||i<2||rnd()<.4))for(let k=0;k<w[i];k++)aff.push(i);if(!aff.length)return;t=aff[Math.floor(rnd()*aff.length)]}
 if(e<TC_T[t].c)return;
-let fr=-1;for(let i=0;i<N;i++)if(G.own[i]===2)fr=Math.max(fr,Math.floor(i/COLS));if(fr<0)return;
-const row=Math.max(0,fr-(t===2?Math.min(2,fr):Math.floor(rnd()*2))),col=Math.floor(rnd()*COLS);let ci=row*COLS+col;if(G.own[ci]!==2){for(let k=0;k<N;k++){const j=(ci+k)%N;if(G.own[j]===2){ci=j;break}}}
-G.q.push({s:'r',t:t,x:(ci%COLS)*S+S/2,y:FY+Math.floor(ci/COLS)*S+S/2})};
+let cand=[];for(let i=0;i<N;i++)if(G.own[i]===(s==='b'?1:2))cand.push(i);if(!cand.length)return;
+let ci;const cx=i=>(i%COLS)*S+S/2,cy=i=>FY+Math.floor(i/COLS)*S+S/2;
+if(thr.length&&d>=1){const th=thr.reduce((a,u)=>prog(u)>prog(a)?u:a,thr[0]),back=t===2?70:t===0?35:45;let bs=1e9;cand.forEach(i=>{const sc=Math.abs(cx(i)-th.x)+Math.abs(cy(i)-(th.y-dy*back))*1.2+(d>=2?0:rnd()*80);if(sc<bs){bs=sc;ci=i}})}
+else{let fr=-1e9;cand.forEach(i=>{fr=Math.max(fr,s==='r'?cy(i):-cy(i))});const front=cand.filter(i=>(s==='r'?cy(i):-cy(i))>=fr-S*(t===2?2.2:1.1));let ax=null;mine.forEach(u=>{if(!ax||prog(u)>prog(ax))ax=u});
+ci=front[Math.floor(rnd()*front.length)];if(ax&&d>=2&&rnd()<.6){let bs=1e9;front.forEach(i=>{const sc=Math.abs(cx(i)-ax.x);if(sc<bs){bs=sc;ci=i}})}}
+G.q.push({s:s,t:t,x:cx(ci),y:cy(ci)})};
 /* ---- sim ---- */
 const step=()=>{G.t+=DT;
 G.q.splice(0).forEach(apply);
-const rg=.72;G.en.b=Math.min(10,G.en.b+rg*DT);G.en.r=Math.min(10,G.en.r+rg*TC_DF[df][2]*DT);if(G.rg.b>0)G.rg.b-=DT;if(G.rg.r>0)G.rg.r-=DT;
-G.aiT-=DT;if(G.aiT<=0){G.aiT=TC_DF[df][3]*(.7+rnd()*.6);ai()}
+const rg=.72;G.en.b=Math.min(10,G.en.b+rg*(G.pxm||1)*DT);G.en.r=Math.min(10,G.en.r+rg*TC_DF[df][2]*DT);if(G.rg.b>0)G.rg.b-=DT;if(G.rg.r>0)G.rg.r-=DT;
+G.aiT-=DT;if(G.aiT<=0){G.aiT=TC_DF[df][3]*(.7+rnd()*.6);ai('r',df)}if(G.px!=null){G.pxT-=DT;if(G.pxT<=0){G.pxT=TC_DF[G.px][3]*(.7+rnd()*.6);ai('b',G.px)}}
 G.nextCr-=DT;if(G.nextCr<=0&&G.cr.length<2){G.nextCr=11+rnd()*5;const col=Math.floor(rnd()*COLS),row=3+Math.floor(rnd()*4);G.cr.push({x:col*S+S/2,y:FY+row*S+S/2,k:Math.floor(rnd()*3),a:0})}
 const U=G.u;
 for(let i=0;i<U.length;i++){const u=U[i];if(u.dead)continue;const sp=TC_T[u.t],dir=u.s==='b'?-1:1,fs=G.rg[u.s]>0?1.6:1;
@@ -3823,7 +3830,7 @@ function iqSetup(){memStop();MEM.v='glv';const b=el('memv'),best=gxBest('iq');
 b.innerHTML='<div class="mst"><span>🧠 Test your IQ</span></div><p class="cm" style="margin:0 0 6px">ألغاز متنوعة في 5 مهارات (أرقام · منطق · لغة · مكاني · ذاكرة). الصعوبة بتتظبط حسب أدائك، ومفيش تلميحات. في الآخر هتشوف تقدير لمستواك مع ملف قدراتك.</p>'
 +'<div class="mg1 iqs" data-n="10" style="margin-top:9px"><i>⚡</i><div><b>اختبار قصير</b><small>10 ألغاز · حوالي 8 دقايق · دقة أقل</small></div></div><div class="mg1 iqs" data-n="20" style="margin-top:9px"><i>🎯</i><div><b>اختبار كامل</b><small>20 لغز · حوالي 18 دقيقة · دقة أعلى</small></div></div>'
 +'<div class="cm" style="text-align:center;margin-top:10px">🏆 أعلى تقدير ليك: '+(best?best:'-')+'</div><p class="cm" style="font-size:12px;margin:8px 0">⚠️ التقييم ده تقدير استرشادي للتفكير المنطقي، مش اختبار ذكاء رسمي ومش تشخيص. بيتأثر بالتركيز والتعب.</p><button class="mbtn o" id="glb" style="margin-top:8px">رجوع</button>';
-b.querySelectorAll('.iqs').forEach(x=>x.onclick=()=>{if(gmOpen())iqStart(+x.dataset.n);else{MEM.v='list';memDraw()}});el('glb').onclick=()=>{MEM.v='list';memDraw()}}
+b.querySelectorAll('.iqs').forEach(x=>x.onclick=()=>iqStart(+x.dataset.n));el('glb').onclick=()=>{MEM.v='list';memDraw()}}
 function iqStart(n){memStop();const plan=[];for(let k=0;k<n/5;k++)plan.push(...ER_SH(Object.keys(IQ_DOM)));
 ER={alive:true,id:++GXID,mode:'iq',n:n,i:0,dl:Date.now()+9e9,hints:0,skips:0,tos:[],lock:false,plan:plan,items:[],th:0,used:[],wr:0};GX={alive:true,id:ER.id,k:'er'};iqRoom()}
 function iqRoom(){erClear();ER.lock=false;ER.alive=true;ER.wr=0;const i=ER.i,dom=ER.plan[i],pool=IQ_DOM[dom].filter(t=>ER.used.slice(-3).indexOf(t)<0),ty=pool[gmR(0,pool.length-1)]||IQ_DOM[dom][0];
@@ -3844,7 +3851,7 @@ const BD=iq>=130?['تفكير متفوق جدًا','ما شاء الله! دي �
 const dm={};Object.keys(IQ_DOM).forEach(k=>{const a=it.filter(x=>x.dom===k),w=a.reduce((s,x)=>s+1+.5*(x.d-1),0);dm[k]=a.length?Math.round(100*a.reduce((s,x)=>s+x.cr*(1+.5*(x.d-1)),0)/w):0});
 const ks=Object.keys(dm).sort((a,b)=>dm[b]-dm[a]),okn=it.filter(x=>x.cr>=.6).length,best=gxBest('iq'),nb=iq>best;gxBest('iq',iq);
 const bars=Object.keys(IQ_DOM).map(k=>'<div style="display:flex;align-items:center;gap:8px;margin:5px 0;font-size:13px;font-weight:800"><span style="width:84px;text-align:right">'+IQ_DN[k]+'</span><div style="flex:1;height:10px;background:#f2d9c6;border-radius:6px;overflow:hidden"><i style="display:block;height:100%;width:'+dm[k]+'%;background:linear-gradient(90deg,#ff8a33,#ff6600)"></i></div><span style="width:36px">'+dm[k]+'%</span></div>').join('');
-gxRes({e:'🧠',t:(nb&&best?'رقم قياسي! ':'')+'تقديرك: IQ ≈ '+iq,s:[['من '+lo2+' لـ '+hi2,'المدى المحتمل'],[okn+' من '+it.length,'ألغاز صح'],[pc+'%','أعلى من عموم الناس (تقدير)']],w:iq>=115,f:()=>iqSetup(),
+gxRes({e:'🧠',t:(nb&&best?'رقم قياسي! ':'')+'تقديرك: IQ ≈ '+iq,s:[['من '+lo2+' لـ '+hi2,'المدى المحتمل'],[okn+' من '+it.length,'ألغاز صح'],[pc+'%','أعلى من عموم الناس (تقدير)']],w:iq>=115,al:true,f:()=>iqSetup(),
 x:'<div style="background:#fff3ea;color:#3a2418;border:1px solid #f1d9c8;border-radius:12px;padding:10px 12px;margin:10px 0;text-align:right"><div style="font-weight:900;margin-bottom:4px">ملف قدراتك · '+band+'</div>'+bars+'<div class="cm" style="margin-top:6px;color:#6b4a35">أقوى مهارة: <b>'+IQ_DN[ks[0]]+'</b> · الأضعف: <b>'+IQ_DN[ks[ks.length-1]]+'</b></div></div><div style="background:'+BD[2]+';color:'+BD[3]+';border-radius:12px;padding:10px 12px;margin:6px 0;text-align:right;line-height:1.9;font-weight:800;font-size:14px">'+BD[1]+'</div><button class="mbtn o" id="iqh" type="button" style="margin:6px 0">❓ يعني إيه المدى؟</button><div id="iqhx" style="display:none;background:#fff3ea;color:#3a2418;border:1px solid #f1d9c8;border-radius:12px;padding:10px 12px;margin:6px 0;text-align:right;line-height:1.9;font-size:14px"><b>يعني إيه المدى؟ 🤔</b><br>الرقم اللي فوق هو <b>أقرب تخمين</b> لمستواك، مش رقم مظبوط بالمللي.<br>ليه؟ لأن الاختبار فيه ألغاز قليلة، وممكن تكون جاوبت صح لغز بالحظ، أو غلطت في لغز كنت عارفه.<br>فبنقولك: <b>مستواك الحقيقي غالبًا واقع جوه المدى ده</b>.<br><b>مثال:</b> لو طلع «من '+lo2+' لـ '+hi2+'»، يبقى مستواك الحقيقي غالبًا في النص ده، والأقرب ليه الرقم الكبير اللي فوق.<br>📏 كل ما الاختبار أطول، المدى بيضيق والنتيجة بتبقى أدق، عشان كده الاختبار الكامل أدق من القصير.</div><p class="cm" style="font-size:12px;text-align:right">⚠️ تقدير استرشادي من '+it.length+' لغز، مش اختبار ذكاء رسمي ومش تشخيص. النتيجة بتتأثر بالتركيز والتعب.</p>'});const hb=el('iqh');if(hb)hb.onclick=()=>{const x=el('iqhx');x.style.display=x.style.display==='none'?'block':'none'}}
 
 </script>
