@@ -3684,7 +3684,26 @@ mv.forEach(i=>{const p=S.tk[seat][i],to=p===-1?0:p+roll;let sc=to*.5;if(p===-1)s
 if(to<=50){const ix=luIdx(seat,to);if(LU_SAFE.has(ix))sc+=25;else{S.act.forEach(s=>{if(s===seat)return;S.tk[s].forEach(q=>{if(q>=0&&q<=50&&luIdx(s,q)===ix)sc+=100+q})});sc-=18*near(ix,seat)}}
 if(p>=0&&p<=50&&!LU_SAFE.has(luIdx(seat,p)))sc+=15*near(luIdx(seat,p),seat);sc+=Math.random()*3;if(sc>best){best=sc;bi=i}});return bi}
 function luNew(act,pl){return{ver:0,status:'play',act:act,pl:pl,turn:act[0],roll:0,six:0,tk:[0,1,2,3].map(()=>[-1,-1,-1,-1]),win:-1,msg:'',host:'',t:Date.now()}}
-function luApi(a,o){return socPost(Object.assign({action:a,dev:socDev()},o||{}))}
+const LU_R=c=>'/rooms/lu'+c;
+async function fbCas(p,fn){for(let k=0;k<8;k++){const r=await fetch(TC_FB+p+'.json',{headers:{'X-Firebase-ETag':'true'}}),et=r.headers.get('ETag'),cur=await r.json(),nv=fn(cur);if(nv===undefined)return{w:false};const w=await fetch(TC_FB+p+'.json',{method:'PUT',headers:{'if-match':et},body:JSON.stringify(nv)});if(w.ok)return{w:true};if(w.status!==412)throw new Error('fb')}return{w:false}}
+function luNorm(S){if(!S)return S;S.act=Object.values(S.act||[]).map(Number);S.pl=[0,1,2,3].map(i=>(S.pl&&S.pl[i])||null);S.tk=[0,1,2,3].map(s=>{const r=S.tk&&S.tk[s];return[0,1,2,3].map(i=>r&&typeof r[i]==='number'?r[i]:-1)});S.msg=S.msg||'';S.host=S.host||'';return S}
+async function luApi(a,o){o=o||{};const dev=socDev(),nmr=String(o.name||'').replace(/\s+/g,' ').trim().slice(0,20)||'لاعب';try{
+if(a==='lu_get'){const d=await fbp(LU_R(o.code));if(!d)return{ok:false,error:'noroom'};return Number(o.ver)===d.ver?{ok:true,same:true}:{ok:true,S:luNorm(d)}}
+if(a==='lu_create'){const n=Math.min(4,Math.max(2,+o.n||2));for(let g=0;g<20;g++){const code=String(1000+Math.floor(Math.random()*9000)),act=LU_ACT[n],pl=[null,null,null,null];pl[act[0]]={n:nmr,dev:dev};
+const S={code:code,ver:1,status:'wait',n:n,act:act,pl:pl,turn:act[0],roll:0,six:0,tk:[0,1,2,3].map(()=>[-1,-1,-1,-1]),win:-1,msg:'',host:dev,t:Date.now()};
+const r=await fbCas(LU_R(code),c=>c&&Date.now()-(c.t||0)<21600000?undefined:S);if(r.w)return{ok:true,S:luNorm(JSON.parse(JSON.stringify(S)))}}return{ok:false,error:'busy'}}
+let res=null;
+await fbCas(LU_R(o.code),c=>{if(!c){res={ok:false,error:'noroom'};return}const S=luNorm(c),W=()=>{S.ver=(S.ver||0)+1;S.t=Date.now();res={ok:true,S:S};return S},F=(e,x)=>{res=Object.assign({ok:false,error:e,S:S},x||{});return};
+if(a==='lu_join'){if(S.pl.some(p=>p&&p.dev===dev)){res={ok:true,S:S};return}if(S.status!=='wait')return F('started');const seat=S.act.find(s=>!S.pl[s]);if(seat===undefined)return F('full');S.pl[seat]={n:nmr,dev:dev};return W()}
+if(a==='lu_start'){if(S.host!==dev)return F('notyou');if(S.status!=='wait'){res={ok:true,S:S};return}let b=0;S.act.forEach(s=>{if(!S.pl[s]){b++;S.pl[s]={n:'كمبيوتر '+b,dev:'',bot:true}}});S.status='play';S.turn=S.act[0];S.roll=0;S.six=0;return W()}
+if(S.status!=='play')return F('state');
+const seat=S.turn,p=S.pl[seat],owner=p&&p.dev===dev,hostCtl=dev===S.host&&p&&(p.bot||(LU.seenAt&&Date.now()-LU.seenAt>40000));if(!(owner||hostCtl))return F('notyou');
+if(a==='lu_roll'){if(S.roll!==0)return F('',{stale:true});const r=gmR(1,6);S.roll=r;S.six=r===6?(S.six||0)+1:0;return W()}
+if(a==='lu_move'){const N=o.S;if(Number(o.base)!==S.ver||!N)return F('',{stale:true});if(!Array.isArray(N.tk)||N.tk.length!==4)return F('bad');const roll=S.roll;let moved=0;
+for(let s=0;s<4;s++){if(!Array.isArray(N.tk[s])||N.tk[s].length!==4)return F('bad');for(let i=0;i<4;i++){const q=S.tk[s][i],n=N.tk[s][i];if(typeof n!=='number'||n<-1||n>56)return F('bad');if(q===n)continue;if(s===seat){moved++;if(!(q===-1?(n===0&&roll===6):(n===q+roll)))return F('bad')}else if(n!==-1)return F('bad')}}
+if(moved>1||S.act.indexOf(Number(N.turn))<0)return F('bad');S.tk=N.tk;S.turn=Number(N.turn);if(Number(N.roll)===0)S.roll=0;S.six=Math.min(3,Math.max(0,Number(N.six)||0));S.msg=String(N.msg||'').slice(0,90);if(N.status==='done'&&S.tk[seat].every(x=>x===56)){S.status='done';S.win=seat}return W()}
+return F('unknown')});
+return res||{ok:false,error:'net'}}catch(e){return null}}
 const LU_RULES='<div class="lurules"><b>📖 قواعد اللودو (المصرية)</b><ol><li>كل لاعب معاه 4 حجارة، ولازم يجيب <b>6</b> عشان يطلّع حجر من البيت.</li><li>لما تجيب <b>6</b> بتلعب تاني.</li><li><b>3 ستات ورا بعض</b> = الدور بيضيع من غير حركة.</li><li>لو حجرك وقف على حجر خصم بتاكله وبيرجع بيته، وبتلعب تاني. المربعات اللي عليها ⭐ ومربعات البداية آمنة.</li><li>لما حجر يوصل للبيت (النهاية) بتلعب تاني، ولازم يوصل بالرقم بالظبط.</li><li>أول واحد يوصّل الـ4 حجارة للنهاية بيكسب.</li></ol></div>';
 function luSetup(){memStop();luStop();MEM.v='glv';const b=el('memv'),ch=(m,n,t)=>'<button class="luchip" data-m="'+m+'" data-n="'+n+'">'+t+'</button>';
 b.innerHTML='<div class="mst"><span>🎲 Ludo · لودو</span><button class="luchip" id="lurb">📖 القواعد</button></div><div id="luru" style="display:none">'+LU_RULES+'</div>'
@@ -3695,8 +3714,8 @@ el('lurb').onclick=()=>{const r=el('luru');r.style.display=r.style.display==='no
 b.querySelectorAll('.luchip[data-m]').forEach(x=>x.onclick=()=>{if(!gmOpen()){MEM.v='list';memDraw();return}luLocal(x.dataset.m,+x.dataset.n)});
 el('luon').onclick=()=>{if(gmOpen())luOnline();else{MEM.v='list';memDraw()}};el('glb').onclick=()=>{MEM.v='list';memDraw()}}
 function luLocal(m,n){const t=m==='bot'?n+1:n,act=LU_ACT[t],pl=[null,null,null,null];act.forEach((s,k)=>{pl[s]=m==='bot'?{n:k?'كمبيوتر '+k:'إنت',bot:k>0}:{n:LU_CN[s]}});LU.m=m;LU.me=act[0];luBegin(luNew(act,pl))}
-function luBegin(S){memStop();luStop();const m=LU.m;LU={m:m,S:S,stop:false,vp:S.tk.map(r=>r.slice()),tk:[],sel:null,busy:false,rolling:false,mv:false,pt:0,turns:0,caps:[0,0,0,0],me:LU.me,code:LU.code};MEM.v='gplay';luFrame();luPlace();luHud();luDice(S.roll||1);
-if(m==='online')LU.pt=setInterval(luPoll,1500);luStep()}
+function luBegin(S){memStop();luStop();const m=LU.m;LU={m:m,S:S,stop:false,vp:S.tk.map(r=>r.slice()),tk:[],sel:null,busy:false,rolling:false,mv:false,pt:0,turns:0,caps:[0,0,0,0],me:LU.me,code:LU.code,seenAt:Date.now()};MEM.v='gplay';luFrame();luPlace();luHud();luDice(S.roll||1);
+if(m==='online')LU.pt=setInterval(luPoll,800);luStep()}
 function luBoard(S){const P=100/15,box=(r,c,w,h,cls,st,tx)=>'<div class="'+cls+'" style="left:'+c*P+'%;top:'+r*P+'%;width:'+w*P+'%;height:'+h*P+'%;'+(st||'')+'">'+(tx||'')+'</div>';let h='';
 [[0,0],[0,9],[9,9],[9,0]].forEach((p,s)=>{const on=S.act.includes(s);h+=box(p[0],p[1],6,6,'lubs','background:'+LU_COL[s]+(on?'':';opacity:.28'))+box(p[0]+1,p[1]+1,4,4,'lubi');[[0,0],[0,1],[1,0],[1,1]].forEach(o=>{h+=box(p[0]+1.5+o[0]*2,p[1]+1.5+o[1]*2,1,1,'lusp','background:'+LU_COL[s]+(on?'':';opacity:.28'))})});
 LU_TRK.forEach((rc,i)=>{const si=LU_ST.indexOf(i);h+=box(rc[0],rc[1],1,1,'luc',si>=0?'background:'+LU_COL[si]:'',LU_SAFE.has(i)&&si<0?'<span style="color:#b9a89a">★</span>':si>=0?'<span style="color:#fff">★</span>':'')});
@@ -3713,7 +3732,7 @@ function luDice(n){luFace(n)}
 function luSpin(){if(LU.spinT)return;LU.spinAt=Date.now();el('lud').classList.add('spin');LU.spinT=setInterval(()=>{if(el('lud'))luFace(gmR(1,6));memTone(300+Math.random()*200,0,.03,'square',.04)},90)}
 async function luSettle(n){if(!LU.spinT)luSpin();const w=Math.max(0,650*LU_SP-(Date.now()-LU.spinAt));if(w)await sleep(w);clearInterval(LU.spinT);LU.spinT=0;const d=el('lud');if(!d)return;d.classList.remove('spin');luFace(n);d.classList.add('pop');setTimeout(()=>d&&d.classList.remove('pop'),300);memSound('ok',n)}
 function luName(S,s){return(S.pl[s]&&S.pl[s].n)||LU_CN[s]}
-function luCtl(S,seat){if(LU.m==='auto')return'bot';if(LU.m==='bot')return seat===LU.me?'me':'bot';if(LU.m==='pass')return'me';const p=S.pl[seat];if(!p)return'wait';if(p.dev===socDev())return'me';if(S.host===socDev()&&(p.bot||Date.now()+(GM.off||0)-S.t>40000))return'bot';return'wait'}
+function luCtl(S,seat){if(LU.m==='auto')return'bot';if(LU.m==='bot')return seat===LU.me?'me':'bot';if(LU.m==='pass')return'me';const p=S.pl[seat];if(!p)return'wait';if(p.dev===socDev())return'me';if(S.host===socDev()&&(p.bot||Date.now()-(LU.seenAt||Date.now())>40000))return'bot';return'wait'}
 function luHud(){const S=LU.S,hd=el('luhd');if(!hd)return;hd.innerHTML=S.act.map(s=>{const n=S.tk[s].filter(p=>p===56).length;return'<div class="luch'+(S.turn===s&&S.status!=='done'?' on':'')+'" style="--c:'+LU_COL[s]+'"><i></i><b>'+esc(luName(S,s))+'</b><small>🏠 '+n+'/4</small></div>'}).join('');
 const ctl=luCtl(S,S.turn),nm=luName(S,S.turn);let m=S.msg||'';if(S.status!=='done'){if(S.roll===0)m=(ctl==='me'?(LU.m==='pass'||LU.m==='online'?'دورك يا '+nm+' — ':'دورك — ')+'ارمي النرد 🎲':'دور '+nm+'...')+(S.msg?'\n'+S.msg:'');else if(S.six>=3)m='3 ستات ورا بعض! الدور ضاع 😅'}
 const lm=el('lumsg');if(lm)lm.textContent=m;LU.canRoll=S.status==='play'&&S.roll===0&&ctl==='me'&&!LU.busy&&!LU.rolling;const d=el('lud');if(d)d.classList.toggle('can',!!LU.canRoll);
@@ -3736,7 +3755,7 @@ let m=[];if(info.cap.length)m.push('💥 '+luName(S,seat)+' أكل '+info.cap.le
 function luDoPass(){if(LU.busy||LU.mv||LU.stop)return;const N=JSON.parse(JSON.stringify(LU.S));N.msg=LU.S.six>=3?'':'مفيش حركة متاحة';luPassS(N);luSend(N)}
 async function luSetState(S2){LU.busy=true;const S0=LU.S;LU.sel=null;
 if(S2.roll>0&&(S0.roll===0||S0.roll!==S2.roll))await luSettle(S2.roll);
-await luAnim(S2);LU.S=S2;LU.busy=false;luHud();luPlace();luStep()}
+await luAnim(S2);LU.S=S2;LU.seenAt=Date.now();LU.busy=false;luHud();luPlace();luStep()}
 async function luAnim(S2){const fw=[],ot=[];LU.tk.forEach(t=>{const a=LU.vp[t.s][t.i],b=S2.tk[t.s][t.i];if(a===b)return;if(b>a)fw.push([t,a,b]);else ot.push([t,b])});
 for(const f of fw){const t=f[0],a=f[1],b=f[2];t.el.classList.add('hop');if(a===-1){LU.vp[t.s][t.i]=0;luPlace();memTone(500,0,.08,'triangle');await luSl(230)}else for(let k=a+1;k<=b;k++){LU.vp[t.s][t.i]=k;luPlace();memTone(360+k*4,0,.04,'square',.06);await luSl(130)}
 t.el.classList.remove('hop');if(b===56){memSound('win');memBurst(t.el,['⭐','✨','🏠'],8)}}
@@ -3755,7 +3774,7 @@ function luWait(S){memStop();luStop();LU.m='online';MEM.v='glv';const b=el('memv
 const draw=S=>{b.innerHTML='<div class="mst"><span>🌐 غرفة لودو</span></div><div class="lucode">'+code+'</div><p class="cm" style="text-align:center;margin:0 0 8px">ابعت الكود لزمايلك عشان يدخلوا ('+S.n+' لاعبين)</p><div class="luwl">'+S.act.map(s=>'<div class="luch" style="--c:'+LU_COL[s]+'"><i></i><b>'+(S.pl[s]?esc(S.pl[s].n)+(S.pl[s].dev===me?' (إنت)':''):'— مستني لاعب —')+'</b></div>').join('')+'</div>'+(host?'<button class="mbtn" id="lust">ابدأ اللعب'+(S.act.some(s=>!S.pl[s])?' (الباقي كمبيوتر)':'')+'</button>':'<p class="cm" style="text-align:center">مستنيين صاحب الغرفة يبدأ اللعب...</p>')+'<button class="mbtn o" id="glb">خروج</button>';
 el('glb').onclick=()=>{luStop();luOnline()};if(host)el('lust').onclick=async()=>{const d=await luApi('lu_start',{code:code});if(d&&d.S&&d.S.status==='play')go(d.S)}};
 const go=S2=>{luStop();LU.code=code;LU.m='online';luBegin(S2)};draw(S);let ver=S.ver;
-LU.pt=setInterval(async()=>{if(LU.stop||MEM.v!=='glv')return;const d=await luApi('lu_get',{code:code,ver:ver});if(LU.stop||MEM.v!=='glv')return;if(!d||!d.ok){if(d&&d.error==='noroom'){luStop();luOnline()}return}if(d.S){ver=d.S.ver;if(d.S.status==='play')go(d.S);else draw(d.S)}},1500)}
+LU.pt=setInterval(async()=>{if(LU.stop||MEM.v!=='glv')return;const d=await luApi('lu_get',{code:code,ver:ver});if(LU.stop||MEM.v!=='glv')return;if(!d||!d.ok){if(d&&d.error==='noroom'){luStop();luOnline()}return}if(d.S){ver=d.S.ver;if(d.S.status==='play')go(d.S);else draw(d.S)}},1000)}
 /* ===== Home: Weekly Challenge top-3 + daily info card, Telesales gate ===== */
 function tsGate(cb){let ok=false;try{ok=sessionStorage.getItem('ts_ok')==='1'}catch(e){}if(ok){cb();return}
 const d=document.createElement('div');d.className='tsg';d.innerHTML='<div class="tsgb"><div style="font-size:36px">📞🔒</div><b>Telesales</b><p>اكتب كلمة سر تاب التيلي سيلز</p><input id="tsgi" type="password" autocomplete="off" placeholder="كلمة السر"><div class="tsge" id="tsge"></div><button class="mbtn" id="tsgo" type="button">دخول</button><button class="mbtn o" id="tsgc" type="button">إلغاء</button></div>';document.body.appendChild(d);
