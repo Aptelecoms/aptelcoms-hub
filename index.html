@@ -2082,7 +2082,6 @@ const BG_GO=[[29,1],[60,2.5],[105,5],[180,10],[300,18],[460,30],[690,50]],BG_O4=
 const BG_SO=[250,250,325,465,465],BG_DSL=[160,210,260,360,420],BG_CUG={pr:1000,ob:1500,om:1500,mu:1500};
 const BG_PK=[];(function(){const add=(k,n,pr,gb,ma,mo,o)=>pr.forEach((p,i)=>BG_PK.push({k:k,n:n,p:p,i:i,gb:gb[i],ma:ma?ma[i]:0,mo:mo?mo[i]:0,pool:o.pool||0,units:o.units?o.units[i]:0,ro:o.ro?o.ro[i]:0,intl:o.intl?o.intl[i]:0,fam:o.fam}));
 add('pr','Premier',[440,630,860,1200,1725],[12,18,25,40,75],[2500,3500,5000,7000,10000],0,{pool:1,intl:[0,20,30,45,60],ro:[1,1,1,1,2],fam:'prem'});
-add('ob','Orange Business',[63,75,115,175],[.45,1,1.75,3],[100,140,230,560],[1000,1400,1600,2000],{ro:[0,0,0,1],fam:'bus'});
 add('om','Orange Business Mix',[63,75,115,175],[.45,1,1.75,3],[90,120,200,500],[1000,1400,1600,2000],{ro:[0,0,0,1],fam:'mix'});
 add('mu','Mix Unit',[60,98,126],[.25,.5,.75],0,0,{units:[1250,2250,3250],fam:'mix'})})();
 const budGB=v=>v<1?Math.round(v*1000)+' ميجا':(Math.round(v*100)/100)+' جيجا';
