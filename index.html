@@ -2146,7 +2146,7 @@ else if(pk.ro)d.push('✈️ رومينج (10)');
 return d}
 function budInv(r,c,withDev){const q={};let sod='';if(!c.data)q[c.pk.k+'_'+c.pk.p]=r.n;c.gplan.forEach(x=>{const key=(x.off?'so_':'go_')+x.list;q[key]=(+q[key]||0)+r.n*x.cnt;if(x.off&&x.disc)sod=String(x.disc)});
 return invCalc(Object.assign({},INV,{q:q,g:r.dp?String(r.dp):'',bc:'',ad:'',sod:sod,dev:withDev?INV.dev:'0'})).total}
-function budCalc(P,dpv,devShare){const n=Math.max(1,Math.floor(invN(P.n))||1),bud=invN(P.b),S=budSpec(P,dpv),dataOnly=S.nc&&!S.ro&&!S.intl,specified=S.hasT||S.hasG||S.ro||S.intl;
+function budCalc(P,dpv,devShare){const n=Math.max(1,Math.floor(invN(P.n))||1),bud=invN(P.b)/n,S=budSpec(P,dpv),dataOnly=S.nc&&!S.ro&&!S.intl,specified=S.hasT||S.hasG||S.ro||S.intl;
 const bf=bud>0?Math.max(0.01,bud-(devShare||0)/n):0,active=!!(bud||specified||S.nc||P.pri);
 const mk=(kind,L0)=>{const a=dataOnly?[]:BG_PK.map(pk=>budEval(pk,S,L0,kind)).filter(Boolean);if(S.nc&&kind==='single'){const d=budEvalData(S,L0);if(d)a.push(d)}return a};
 const U=mk('single',Infinity),Bd=bud>0?mk('single',bf):U.slice();
@@ -2224,7 +2224,7 @@ const inp=(p,f,l,ph,v,hot)=>'<div><label style="text-align:center'+(hot?';color:
 const sec=t=>'<div style="font-weight:800;margin:14px 0 6px">'+t+'</div>';
 let ps='';BUD.ps.forEach((P,i)=>{const T=+P.T||0,G=+P.G||0;
 ps+='<div class="qz" style="padding:12px"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><input class="ni" data-p="'+i+'" data-f="nm" value="'+(P.nm||'').replace(/"/g,'&quot;')+'" placeholder="اسم الفئة (صاحب الشركة، موظفين...)" style="padding:10px;font-weight:800;flex:1">'+(BUD.ps.length>1?'<button class="invbc" data-act="rm" data-p="'+i+'" aria-label="حذف الفئة">🗑️</button>':'')+'</div>'
-+'<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">'+inp(i,'n','عدد الخطوط','1',P.n)+inp(i,'b','الميزانية للشخص شهريًا (شاملة الضرايب)','اختياري',P.b)+'</div>'
++'<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">'+inp(i,'n','عدد الخطوط','1',P.n)+inp(i,'b','الميزانية الإجمالية للفئة شهريًا (شاملة الضرايب)','اختياري',P.b)+'</div>'
 +sec('🎯 العميل مهتم بإيه؟')+'<div style="display:flex;flex-wrap:wrap;gap:8px">'+chip(i,'pri','calls','📞 مكالمات أكتر',P.pri==='calls')+chip(i,'pri','net','🌐 نت أكتر',P.pri==='net')+chip(i,'pri','both','⚖️ الاتنين',P.pri==='both')+'</div>'
 +sec('📞 المكالمات (دقيقة في الشهر)')+'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">'+chip(i,'nc','1','مش محتاج مكالمات',P.nc)+chip(i,'T','300','قليل 300',!P.nc&&T===300)+chip(i,'T','1000','متوسط 1000',!P.nc&&T===1000)+chip(i,'T','2500','كتير 2500',!P.nc&&T===2500)+chip(i,'T','5000','كتير جدًا 5000',!P.nc&&T===5000)+'</div>'
 +(P.nc?'':inp(i,'T','أو اكتب العدد','مش محدد',P.T))
