@@ -1959,7 +1959,7 @@ const INV_FAM=[
 {k:'mu',n:'Orange Business Mix Unit',t:[60,98,126]},
 {k:'go',n:'Business Go',t:[29,60,105,180,300,460,690],data:1},
 {k:'so',n:'Smart Office',t:[290,375,535,800,1900],data:1}];
-const INV={q:{},d:{},g:'',t8:'8',vat:'14',ret:'5',dev:'10',bc:'',ad:'',nm:'',basis:'act',tab:'calc',sod:''};
+const INV={q:{},d:{},g:'',t8:'8',vat:'14',ret:'5',dev:'10',bc:'',ad:'',nm:'',basis:'act',tab:'calc',sod:'',lk:false};
 const invN=v=>{const n=parseFloat(String(v==null?'':v).replace(/[\u0660-\u0669]/g,d=>d.charCodeAt(0)-1632).replace(/[\u06F0-\u06F9]/g,d=>d.charCodeAt(0)-1776).replace(/[\u066B,]/g,'.').replace(/[^0-9.]/g,''));return isNaN(n)?0:n};
 function openBill(){document.body.classList.add('cmx');el('intro').classList.add('hide');cmMode='inv';cmT='c';cmLast=null;cmUI();scrollTo(0,0)}
 function cmModesBar(){return '<div class="tb" id="cmModes"><button data-mode="sales">💰 Sales Commission</button><button data-mode="tl">👔 Team Leader Commission 🔒</button><button data-mode="tg">🎯 تارجت الفرع</button></div>'}
@@ -1973,9 +1973,10 @@ function invCalc(I){I=I||INV;const t8p=Math.max(0,invN(I.t8)),vp=Math.max(0,invN
 const R2=x=>Math.round(x*100)/100,k=(1+t8p/100)*(1+vp/100);
 let fr=1,per=null;
 if(I.bc&&INVBC[I.bc]&&I.ad){const m=String(I.ad).match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m){const a=new Date(+m[1],+m[2]-1,+m[3]),D=INVBC[I.bc];let c=new Date(a.getFullYear(),a.getMonth(),D);if(c<=a)c=new Date(a.getFullYear(),a.getMonth()+1,D);const pv=new Date(c.getFullYear(),c.getMonth()-1,D),days=Math.round((c-a)/864e5),cyc=I.basis==='30'?30:Math.round((c-pv)/864e5);fr=Math.max(0,Math.min(1,days/cyc));per={a:a,c:c,days:days,cyc:cyc,bc:I.bc}}}
-const o={t8p:t8p,vp:vp,ret:ret,dev:dev,gd:gd,fr:fr,per:per,rows:[],nv:0,nd:0,sub:0,dis:0,net0:0,pf:0,rt0:0,rt:0,dv:0,devTot:0,pre:0,t8:0,mid:0,vat:0,total:0};
+let lkd={},lkT=0,lkN=0,lkP=0;if(I.lk){const pd=[],so=[];INV_FAM.forEach(F=>{if(F.k==='pr')F.t.forEach((p,i)=>{const q=Math.floor(invN(I.q['pr_'+p]));for(let j=0;j<q;j++)pd.push(BG_SO[i])});if(F.k==='so')F.t.forEach(p=>{const q=Math.floor(invN(I.q['so_'+p]));for(let j=0;j<q;j++)so.push(p)})});pd.sort((a,b)=>b-a);so.sort((a,b)=>b-a);lkP=pd.length;for(let j=0;j<Math.min(pd.length,so.length);j++){const d=Math.min(pd[j],so[j]);lkd[so[j]]=(lkd[so[j]]||0)+d;lkT+=d;lkN++}}
+const o={lkT:lkT,lkN:lkN,lkP:lkP,t8p:t8p,vp:vp,ret:ret,dev:dev,gd:gd,fr:fr,per:per,rows:[],nv:0,nd:0,sub:0,dis:0,net0:0,pf:0,rt0:0,rt:0,dv:0,devTot:0,pre:0,t8:0,mid:0,vat:0,total:0};
 INV_FAM.forEach(F=>{F.t.forEach(p=>{const q=Math.floor(invN(I.q[F.k+'_'+p]));if(q<=0)return;
-const s=(F.k==='so'?Math.max(0,p-invN(I.sod)):p)*q,d=F.data?0:s*gd/100,n=s-d,r=F.data?0:ret*q;
+const s=F.k==='so'?(I.lk?p*q-(lkd[p]||0):Math.max(0,p-invN(I.sod))*q):p*q,d=F.data?0:s*gd/100,n=s-d,r=F.data?0:ret*q;
 o.sub+=s;o.dis+=d;o.net0+=n;o.rt0+=r;if(F.data)o.nd+=q;else o.nv+=q;
 o.rows.push({n:F.n+' '+p,q:q,net:n*fr,tot:(n+r)*fr*k})})});
 if(o.rows.length)o.dv=dev;
@@ -1992,6 +1993,7 @@ let h='<div class="res" style="padding:0;overflow:hidden;margin:10px 0">'+sh('�
 +(o.per?rw('الفترة · BC'+o.per.bc+' (إصدار '+invFmtD(o.per.c)+')',invFmtD(o.per.a)+' ← '+invFmtD(new Date(o.per.c.getFullYear(),o.per.c.getMonth(),o.per.c.getDate()-1))):'')
 +rw('عدد الخطوط',nl+(o.nv&&o.nd?' ('+o.nv+' صوت + '+o.nd+' داتا)':(o.nd?' (داتا)':'')))
 +rw('اشتراك الباقات قبل الخصم',f(o.sub))
++(o.lkT?rw('🎁 منه خصم ربط داتا بخط Premier ('+o.lkN+' خط) — محسوب بالفعل','− '+f(o.lkT)):'')
 +(o.dis?rw('خصم '+fx(o.gd)+'% (على الصوت)','− '+f(o.dis)):'')
 +rw('الاشتراك الشهري بعد الخصم',f(o.net0))
 +(part?rw('محاسبة جزئية: '+o.per.days+' يوم من '+o.per.cyc,'− '+f(o.pf)):'')
@@ -2003,11 +2005,12 @@ let h='<div class="res" style="padding:0;overflow:hidden;margin:10px 0">'+sh('�
 +rw('المجموع شامل ضريبة الجدول',f(o.mid),1)
 +rw('ضريبة القيمة المضافة '+fx(o.vp)+'%',f(o.vat))
 +'<div style="background:var(--or);color:#fff;padding:14px;display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;font-size:15px">الإجمالي المستحق</span><span style="font-weight:800;font-size:28px">'+f(o.total)+' <span style="font-size:14px">جنيه</span></span></div></div>'
++'<button class="qx" id="invlk" style="width:100%;min-height:50px;margin:0 0 10px;'+(INV.lk?'':'background:var(--card);color:var(--tx);border:2px solid var(--or)')+'">'+(INV.lk?'✅ ربط داتا بخط Premier — شغال (اضغط للإلغاء)':'🔗 ربط داتا بخط Premier')+'</button>'+(INV.lk?'<div class="cm" style="margin:-4px 0 10px">'+(o.lkN?'الخصم اتطبق على '+o.lkN+' خط Smart Office (خط لكل خط Premier)'+(o.lkP<(o.lkN+0)?'':'')+'.':(o.lkP?'مفيش خط Smart Office يتربط.':'محتاج خط Premier وخط Smart Office عشان الربط يشتغل.')):'')
 +'<div class="qz" style="padding:0;overflow:hidden;margin:10px 0">'+sh('📋 تفصيل الخطوط')+'<div class="tw" style="margin:0"><table style="width:100%"><tr><th>الباقة</th><th>العدد</th><th>بعد الخصم'+(part?' والجزئي':'')+'</th><th>الإجمالي بالضرائب</th></tr>'
 +o.rows.map(r=>'<tr><td>'+r.n+'</td><td>'+r.q+'</td><td>'+f(r.net)+'</td><td>'+f(r.tot)+'</td></tr>').join('')
 +'<tr><td>دمغات ورسوم تنمية</td><td>1</td><td>'+f(o.dv)+'</td><td>'+f(o.devTot)+'</td></tr><tr class="tot"><td>الإجمالي</td><td>'+nl+'</td><td></td><td>'+f(o.total)+'</td></tr></table></div></div>'
 +'<div class="cm">نفس ترتيب الفاتورة: الرسوم قبل الضرائب، والخصم على سعر اشتراك الصوت بس</div>';
-R.innerHTML=h}
+R.innerHTML=h;{const lb=el('invlk');if(lb)lb.onclick=()=>{INV.lk=!INV.lk;invR()}}}
 function invQuoteText(){const o=invCalc();if(!o.rows.length)return '';const f=invF,fx=invFx;
 let t='🧾 عرض سعر — Orange Business\n';if(INV.nm)t+='العميل: '+INV.nm+'\n';t+='────────────\n';
 o.rows.forEach(r=>{t+='• '+r.n+' × '+r.q+' — '+f(r.tot)+'\n'});
@@ -2071,7 +2074,7 @@ document.querySelectorAll('#cmv [data-bc]').forEach(b=>{b.onclick=()=>{INV.bc=b.
 {const bs=el('invbasis');bs.value=INV.basis;bs.onchange=()=>{INV.basis=bs.value;invR()}}
 {const n=el('invnm');n.value=INV.nm||'';n.oninput=()=>{INV.nm=n.value}}
 el('invshi').onclick=invShareImg;el('invsht').onclick=invShareTxt;
-el('invclr').onclick=()=>{if(!confirm('تمسح كل الأعداد والخصم؟'))return;INV.q={};INV.g='';INV.bc='';INV.ad='';INV.nm='';INV.sod='';invUI()};
+el('invclr').onclick=()=>{if(!confirm('تمسح كل الأعداد والخصم؟'))return;INV.q={};INV.g='';INV.bc='';INV.ad='';INV.nm='';INV.sod='';INV.lk=false;invUI()};
 invPD();invR();invBindTabs()}
 
 /* ---- Customer Budget (tab inside Bill) ---- */
@@ -2144,7 +2147,7 @@ if(pk.k==='pr'){d.push('✈️ رومينج داتا '+BG_ROD[pk.i]+(pk.ro===2?'
 else if(pk.ro)d.push('✈️ رومينج (10)');
 return d}
 function budInv(r,c,withDev){const q={};let sod='';if(!c.data)q[c.pk.k+'_'+c.pk.p]=r.n;c.gplan.forEach(x=>{const key=(x.off?'so_':'go_')+x.list;q[key]=(+q[key]||0)+r.n*x.cnt;if(x.off&&x.disc)sod=String(x.disc)});
-return invCalc(Object.assign({},INV,{q:q,g:r.dp?String(r.dp):'',bc:'',ad:'',sod:sod,dev:withDev?INV.dev:'0'})).total}
+return invCalc(Object.assign({},INV,{lk:false,q:q,g:r.dp?String(r.dp):'',bc:'',ad:'',sod:sod,dev:withDev?INV.dev:'0'})).total}
 function budCalc(P,dpv,devShare){const n=Math.max(1,Math.floor(invN(P.n))||1),bud=invN(P.b)/n,S=budSpec(P,dpv),dataOnly=S.nc&&!S.ro&&!S.intl,specified=S.hasT||S.hasG||S.ro||S.intl;
 const bf=bud>0?Math.max(0.01,bud-(devShare||0)/n):0,active=!!(bud||specified||S.nc||P.pri);
 const mk=(kind,L0)=>{const a=dataOnly?[]:BG_PK.map(pk=>budEval(pk,S,L0,kind)).filter(Boolean);if(S.nc&&kind==='single'){const d=budEvalData(S,L0);if(d)a.push(d)}return a};
@@ -2172,7 +2175,7 @@ const withDev=!multi;let h='';
 if(multi){const q={};let sod='',vl=0,dlines=0,rows='';
 items.forEach(x=>{if(!x.b)return;const b=x.b,r=x.r;if(!b.data){q[b.pk.k+'_'+b.pk.p]=(+q[b.pk.k+'_'+b.pk.p]||0)+r.n;vl+=r.n}b.gplan.forEach(o=>{const key=(o.off?'so_':'go_')+o.list;q[key]=(+q[key]||0)+r.n*o.cnt;dlines+=r.n*o.cnt;if(o.off&&o.disc)sod=String(o.disc)});
 rows+='<div class="row" style="padding:8px 0;border-bottom:1px solid var(--bd)"><span><b>'+(x.P.nm||'فئة '+(x.i+1))+'</b> · '+r.n+' × '+b.label+(r.bundle?' <span class="cm">(أو Bundle)</span>':'')+'</span><b>'+f(budInv(r,b,false))+'</b></div>'});
-const tot=invCalc(Object.assign({},INV,{q:q,g:BUD.d==='0'?'':String(BUD.d),bc:'',ad:'',sod:sod})).total;
+const tot=invCalc(Object.assign({},INV,{lk:false,q:q,g:BUD.d==='0'?'':String(BUD.d),bc:'',ad:'',sod:sod})).total;
 if(vl||dlines)h+='<div class="qz" style="padding:12px;margin:10px 0"><div style="font-weight:800;color:var(--or);margin-bottom:6px">👥 إجمالي الفريق · '+(vl+dlines)+' خط'+(dlines?' ('+vl+' صوت + '+dlines+' داتا)':'')+'</div>'+rows+'<div class="row" style="padding:10px 0 0;font-size:17px;font-weight:800"><span>إجمالي الفاتورة شهريًا</span><b style="color:var(--or)">'+f(tot)+' ج</b></div><div class="cm">بمعادلة الفاتورة نفسها، شامل الضرايب ودمغات التنمية مرة واحدة</div></div>'}
 items.forEach(x=>{const P=x.P,r=x.r,b=x.b,S=r.S,nm=P.nm||'فئة '+(x.i+1);
 const ask=[];if(!S.hasT&&!S.nc)ask.push('بيتكلم قد إيه؟');if(S.hasT&&!S.shKnown)ask.push('بيكلم أورانج ولا شبكات تانية؟');if(!S.hasG&&!S.nc)ask.push('محتاج كام جيجا؟');if(!(r.bud>0))ask.push('ميزانيته كام؟');if(!P.pri)ask.push('المكالمات أهم ولا النت؟');
@@ -2213,7 +2216,7 @@ h+='<div class="qz" style="padding:12px;margin:10px 0"><div style="font-weight:8
 h+='<button class="qx" id="budgo" style="width:100%;margin-top:6px;min-height:48px">🧮 احسب الفاتورة (خط واحد)</button>';
 if(ok.some(x=>x.r.bundle))h+='<button class="qx" id="budgo2" style="width:100%;margin-top:8px;min-height:48px">🧩 احسب الفاتورة بالـ Bundle</button>'}
 R.innerHTML=h;const g=el('budgo');if(g)g.onclick=()=>budGo(rs,0);const g2=el('budgo2');if(g2)g2.onclick=()=>budGo(rs,1)}
-function budGo(rs,useBundle){INV.q={};INV.sod='';const add=(key,q)=>{INV.q[key]=String((+INV.q[key]||0)+q)};
+function budGo(rs,useBundle){INV.q={};INV.sod='';INV.lk=false;const add=(key,q)=>{INV.q[key]=String((+INV.q[key]||0)+q)};
 rs.forEach(r=>{if(!r.active)return;const b=(useBundle&&r.bundle)?r.bundle:r.best;if(!b)return;if(!b.data)add(b.pk.k+'_'+b.pk.p,r.n);b.gplan.forEach(x=>{add((x.off?'so_':'go_')+x.list,r.n*x.cnt);if(x.off&&x.disc)INV.sod=String(x.disc)})});
 INV.g=BUD.d==='0'?'':String(BUD.d);INV.tab='calc';invUI();scrollTo(0,0)}
 function budPaint(){document.querySelectorAll('#cmv [data-bd]').forEach(b=>{const on=b.dataset.bd===String(BUD.d);b.style.background=on?'var(--or)':'var(--card)';b.style.color=on?'#fff':'var(--tx)'})}
