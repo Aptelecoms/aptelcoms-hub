@@ -3692,7 +3692,7 @@ function luNew(act,pl){return{ver:0,status:'play',act:act,pl:pl,turn:act[0],roll
 const LU_R=c=>'/rooms/lu'+c;
 async function fbCas(p,fn){for(let k=0;k<8;k++){const r=await fetch(TC_FB+p+'.json',{headers:{'X-Firebase-ETag':'true'}}),et=r.headers.get('ETag'),cur=await r.json(),nv=fn(cur);if(nv===undefined)return{w:false};const w=await fetch(TC_FB+p+'.json',{method:'PUT',headers:{'if-match':et},body:JSON.stringify(nv)});if(w.ok)return{w:true};if(w.status!==412)throw new Error('fb')}return{w:false}}
 function luNorm(S){if(!S)return S;S.act=Object.values(S.act||[]).map(Number);S.pl=[0,1,2,3].map(i=>(S.pl&&S.pl[i])||null);S.tk=[0,1,2,3].map(s=>{const r=S.tk&&S.tk[s];return[0,1,2,3].map(i=>r&&typeof r[i]==='number'?r[i]:-1)});S.msg=S.msg||'';S.host=S.host||'';return S}
-async function luApi(a,o){o=o||{};const dev=socDev(),nmr=String(o.name||'').replace(/\s+/g,' ').trim().slice(0,20)||'لاعب';try{
+async function luApi(a,o){o=o||{};const dev=socDev(),nmr=String(o.name||'').replace(/\s+/g,' ').trim().slice(0,20)||'لاعب';if(String(a).slice(0,3)==='ch_')return socPost(Object.assign({action:a,dev:dev},o));try{
 if(a==='lu_get'){const d=await fbp(LU_R(o.code));if(!d)return{ok:false,error:'noroom'};return Number(o.ver)===d.ver?{ok:true,same:true}:{ok:true,S:luNorm(d)}}
 if(a==='lu_create'){const n=Math.min(4,Math.max(2,+o.n||2));for(let g=0;g<20;g++){const code=String(1000+Math.floor(Math.random()*9000)),act=LU_ACT[n],pl=[null,null,null,null];pl[act[0]]={n:nmr,dev:dev};
 const S={code:code,ver:1,status:'wait',n:n,act:act,pl:pl,turn:act[0],roll:0,six:0,tk:[0,1,2,3].map(()=>[-1,-1,-1,-1]),win:-1,msg:'',host:dev,t:Date.now()};
